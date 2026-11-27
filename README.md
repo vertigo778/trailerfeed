@@ -61,13 +61,16 @@ If the workflow can't push, check **Settings → Actions → General → Workflo
 Each day the script searches YouTube for videos uploaded in the last 7 days matching a few queries ("official trailer", "official teaser trailer", and so on), ordered by view count. It keeps videos that:
 
 - have "trailer" or "teaser" in the title,
-- don't look like reactions, fan edits, video game trailers, reviews, episodes or Shorts,
+- don't look like reactions, fan edits, commentary, clickbait (emoji or "!" titles), game, music or TV trailers, or Shorts,
+- are in English (YouTube's audio language when the uploader set it, otherwise judged from the title and channel),
 - can be embedded, and
 - have at least 100,000 views.
 
-Trailers stay in the feed for 60 days (view counts refresh while they keep showing up in searches), up to 120 at a time, newest first.
+When the same trailer is uploaded by several channels (regional studios, dubs), only the most viewed upload is kept.
 
-You can tune this without editing code by adding repository **variables** (**Settings → Secrets and variables → Actions → Variables**), which the workflow already passes through: `SEARCH_WINDOW_DAYS`, `KEEP_DAYS`, `MIN_VIEWS`, `MAX_ITEMS`, `REGION_CODE`, and `QUERIES` (separated by `|`).
+Trailers stay in the feed for 60 days, up to 120 at a time, newest first. Each run also re-checks trailers already in the feed, so view counts stay current and stricter rules clean out older entries.
+
+You can tune this without editing code by adding repository **variables** (**Settings → Secrets and variables → Actions → Variables**), which the workflow already passes through: `SEARCH_WINDOW_DAYS`, `KEEP_DAYS`, `MIN_VIEWS`, `MAX_ITEMS`, `REGION_CODE`, `QUERIES` (separated by `|`), and `ENGLISH_ONLY` (set to `false` to include every language).
 
 ## Running locally
 
