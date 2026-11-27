@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { findTrailers, merge, isTrailer } from "../fetch-trailers.mjs";
 
 const now = new Date("2026-11-27T12:00:00Z");
-const cfg = { searchWindowDays: 7, keepDays: 60, minViews: 100000, maxItems: 120, regionCode: "US", queries: ["official trailer"] };
+const cfg = { channels: [], searchWindowDays: 7, keepDays: 60, minViews: 100000, maxItems: 120, regionCode: "US", queries: ["official trailer"] };
 
 function mockFetch(searchItems, videoItems) {
   const calls = [];
@@ -82,25 +82,69 @@ test("isTrailer drops fan commentary, clickbait, games and music", () => {
   assert.ok(isTrailer({ title: "Avengers: Doomsday | Final Trailer | In Theaters December 18", channelTitle: "Marvel Entertainment" }));
 });
 
-test("isEnglish uses YouTube's language when set, otherwise the title and channel", () => {
-  assert.ok(isEnglish({ title: "Anything", audioLanguage: "en-US" }));
-  assert.ok(!isEnglish({ title: "Vrushakarma Official Trailer", audioLanguage: "te" }));
-  assert.ok(isEnglish({ title: "Dune: Part Three - Exclusive Teaser Trailer (2026)", channelTitle: "IGN" }));
-  assert.ok(isEnglish({ title: "Avengers: Doomsday | Final Trailer", channelTitle: "Marvel Entertainment" }));
-  assert.ok(!isEnglish({ title: "Vingadores - Doutor Destino | Trailer Final Dublado", channelTitle: "ingresso.com" }));
-  assert.ok(!isEnglish({ title: "K-POP: THE DEBUT | Official Trailer 케이팝 슈퍼스타 | 공식 예고편", channelTitle: "Paramount" }));
-  assert.ok(!isEnglish({ title: "Cosmic Samson Trailer", channelTitle: "Think Music India" }));
+test("isEnglish requires a listed channel, then checks language, title and channel", () => {
+  const studios = { channels: ["marvel entertainment", "netflix"] };
+  assert.ok(isEnglish({ title: "Avengers: Doomsday | Final Trailer", channelTitle: "Marvel Entertainment", audioLanguage: "en" }, studios));
+  assert.ok(!isEnglish({ title: "Cosmic Samson Trailer", channelTitle: "Think Music India", audioLanguage: "en" }, studios));
+  assert.ok(!isEnglish({ title: "Vrushakarma Official Trailer", channelTitle: "Sri Venkateswara Creations" }, studios));
+  assert.ok(isEnglish({ title: "Anything", audioLanguage: "en-US" }, { channels: [] }));
+  assert.ok(!isEnglish({ title: "Vrushakarma Official Trailer", audioLanguage: "te" }, { channels: [] }));
+  assert.ok(isEnglish({ title: "Dune: Part Three - Exclusive Teaser Trailer (2026)", channelTitle: "IGN" }, { channels: [] }));
+  assert.ok(isEnglish({ title: "Avengers: Doomsday | Final Trailer", channelTitle: "Marvel Entertainment" }, { channels: [] }));
+  assert.ok(!isEnglish({ title: "Vingadores - Doutor Destino | Trailer Final Dublado", channelTitle: "ingresso.com" }, { channels: [] }));
+  assert.ok(!isEnglish({ title: "K-POP: THE DEBUT | Official Trailer 케이팝 슈퍼스타 | 공식 예고편", channelTitle: "Paramount" }, { channels: [] }));
+  assert.ok(!isEnglish({ title: "Cosmic Samson Trailer", channelTitle: "Think Music India" }, { channels: [] }));
 });
 
-test("dedupe keeps the most viewed upload of each movie", () => {
+test("dedupe collapses re-uploads of one trailer but keeps new versions", () => {
   assert.equal(movieKey("Avengers: Doomsday | Final Trailer | In Cinemas December 17"), "avengers doomsday");
   assert.equal(movieKey("Official Trailer - Chaalchitro: The Ekchala Murders | Tota"), "chaalchitro the ekchala murders");
   const list = [
-    { id: "a", title: "Avengers: Doomsday | Final Trailer | Marvel BE", views: 800 },
-    { id: "b", title: "Avengers: Doomsday | Final Trailer | In Theaters December 18", views: 66000 },
-    { id: "c", title: "AVENGERS 5: DOOMSDAY Official Final Trailer (2026) Marvel", views: 500 },
-    { id: "d", title: "Hail Mary - Official Trailer", views: 10 },
-    { id: "e", title: "Project Hail Mary | Official Trailer", views: 20 },
+    { id: "a", title: "Avengers: Doomsday | Final Trailer | Marvel BE", views: 800, publishedAt: "2026-11-23T15:00:00Z" },
+    { id: "b", title: "Avengers: Doomsday | Final Trailer | In Theaters December 18", views: 66000, publishedAt: "2026-11-23T14:00:00Z" },
+    { id: "c", title: "AVENGERS 5: DOOMSDAY Official Final Trailer (2026) Marvel", views: 500, publishedAt: "2026-11-24T09:00:00Z" },
+    { id: "d", title: "Hail Mary - Official Trailer", views: 10, publishedAt: "2026-11-23T00:00:00Z" },
+    { id: "e", title: "Project Hail Mary | Official Trailer", views: 20, publishedAt: "2026-11-23T00:00:00Z" },
+    { id: "f", title: "Avengers: Doomsday | Official Trailer", views: 90000, publishedAt: "2026-10-20T14:00:00Z" },
   ];
-  assert.deepEqual(dedupe(list).map((t) => t.id), ["b", "d", "e"]);
+  assert.deepEqual(dedupe(list, { sameTrailerDays: 3 }).map((t) => t.id), ["b", "d", "e", "f"]);
+});
+
+import { movieName, summaryFromDescription, addSummaries } from "../fetch-trailers.mjs";
+
+test("movieName pulls the movie out of a trailer title", () => {
+  assert.equal(movieName("Avengers: Doomsday | Final Trailer | In Theaters December 18"), "Avengers: Doomsday");
+  assert.equal(movieName("Dune: Part Three - Exclusive Teaser Trailer (2026) Timothée Chalamet"), "Dune: Part Three");
+  assert.equal(movieName("Mr. Irrelevant | New Trailer (2026 Movie) - David Corenswet"), "Mr. Irrelevant");
+});
+
+test("summaryFromDescription keeps the plot paragraph and drops promo lines", () => {
+  const d = "The end is near.\n\nIn a world shattered by Doctor Doom, the Avengers must reunite to stop a threat to every reality.\n\nSubscribe: https://youtube.com/x\n#Avengers";
+  assert.equal(summaryFromDescription(d), "In a world shattered by Doctor Doom, the Avengers must reunite to stop a threat to every reality.");
+  assert.equal(summaryFromDescription("Watch now! https://x.com #movie"), "");
+});
+
+test("addSummaries uses TMDB once per movie, then falls back to the description", async () => {
+  const calls = [];
+  const fetchFn = async (url) => {
+    calls.push(url.searchParams.get("query"));
+    const results = url.searchParams.get("query") === "Avengers: Doomsday"
+      ? [{ id: 1, title: "Avengers: Doomsday", overview: "Doom arrives.", release_date: "2026-12-18", popularity: 99 },
+         { id: 2, title: "Avengers: Doomsday Fan Cut", overview: "x", release_date: "2026-01-01", popularity: 1 }]
+      : [];
+    return { ok: true, json: async () => ({ results }) };
+  };
+  const trailers = [
+    { id: "a", title: "Avengers: Doomsday | Final Trailer", descriptionSummary: "Desc A." },
+    { id: "b", title: "Avengers: Doomsday | Official Trailer", descriptionSummary: "Desc B." },
+    { id: "c", title: "Paper Tiger - Final Trailer", descriptionSummary: "Two brothers chase a dream." },
+  ];
+  await addSummaries(trailers, { tmdbKey: "k", fetchFn, now: new Date("2026-11-27") });
+  assert.deepEqual(calls, ["Avengers: Doomsday", "Paper Tiger"]);
+  assert.equal(trailers[0].summary, "Doom arrives.");
+  assert.equal(trailers[1].releaseDate, "2026-12-18");
+  assert.equal(trailers[2].summary, "Two brothers chase a dream.");
+  const noKey = [{ id: "d", title: "X | Trailer", descriptionSummary: "Fallback." }];
+  await addSummaries(noKey, {});
+  assert.equal(noKey[0].summary, "Fallback.");
 });

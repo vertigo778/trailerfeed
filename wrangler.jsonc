@@ -1,0 +1,10 @@
+// Cloudflare Workers config: serves this folder as a static site (no Worker code).
+{
+  "name": "trailerfeed",
+  "compatibility_date": "2025-09-01",
+  "assets": {
+    "directory": "."
+  },
+  // Branch and pull request builds run `wrangler preview`, which requires this block.
+  "previews": {}
+}

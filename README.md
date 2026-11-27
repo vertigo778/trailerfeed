@@ -7,6 +7,7 @@ There is no server. A GitHub Action runs once a day, asks the YouTube Data API f
 ```
 index.html, style.css, app.js     the site
 _headers                          cache rules for Cloudflare
+wrangler.jsonc, .assetsignore     Cloudflare Workers config (static files, plus branch previews)
 data/trailers.json                the feed (written by the Action)
 scripts/fetch-trailers.mjs        the daily YouTube search (Node 20+, no dependencies)
 scripts/test/                     unit tests and sample data for local previews
@@ -32,6 +33,16 @@ In your GitHub repo: **Settings → Secrets and variables → Actions → New re
 - Secret: the key from step 1
 
 The key is only ever read by the Action. It never goes into the site or the repo.
+
+### 2b. (Optional) TMDB key for movie summaries
+
+Each trailer shows a short plot summary. Without a TMDB key, it comes from the first plot-like paragraph of the YouTube description, which many uploads don't have. With a key, it comes from [The Movie Database](https://www.themoviedb.org/), which also adds the release date.
+
+1. Create a free account at themoviedb.org, then go to **Settings → API** and request an API key (choose "Developer", personal use).
+2. Copy the **API Key** (or the longer **API Read Access Token**; either works).
+3. Add it as a repository secret named `TMDB_API_KEY`.
+
+Each movie is looked up once and the result is kept, so this uses very few requests.
 
 ### 3. Host it: Cloudflare Pages (recommended) or GitHub Pages
 
@@ -62,15 +73,15 @@ Each day the script searches YouTube for videos uploaded in the last 7 days matc
 
 - have "trailer" or "teaser" in the title,
 - don't look like reactions, fan edits, commentary, clickbait (emoji or "!" titles), game, music or TV trailers, or Shorts,
-- are in English (YouTube's audio language when the uploader set it, otherwise judged from the title and channel),
+- come from a known US studio, streamer or trailer channel (Marvel, Warner Bros., Universal, Paramount, A24, Netflix, IGN, and so on; the full list is `channels` in `scripts/fetch-trailers.mjs`) and look English (title script, no dub markers, YouTube's audio language when set). Uploaders' language tags alone proved unreliable,
 - can be embedded, and
 - have at least 100,000 views.
 
-When the same trailer is uploaded by several channels (regional studios, dubs), only the most viewed upload is kept.
+When the same trailer is uploaded by several channels within a few days (the studio, IGN, KinoCheck and so on), only the most viewed upload is kept. A new trailer for the same movie later on (a second trailer, a final trailer) is added as its own entry, so the feed picks up every new Dune or Doomsday trailer.
 
 Trailers stay in the feed for 60 days, up to 120 at a time, newest first. Each run also re-checks trailers already in the feed, so view counts stay current and stricter rules clean out older entries.
 
-You can tune this without editing code by adding repository **variables** (**Settings → Secrets and variables → Actions → Variables**), which the workflow already passes through: `SEARCH_WINDOW_DAYS`, `KEEP_DAYS`, `MIN_VIEWS`, `MAX_ITEMS`, `REGION_CODE`, `QUERIES` (separated by `|`), and `ENGLISH_ONLY` (set to `false` to include every language).
+You can tune this without editing code by adding repository **variables** (**Settings → Secrets and variables → Actions → Variables**), which the workflow already passes through: `SEARCH_WINDOW_DAYS`, `KEEP_DAYS`, `MIN_VIEWS`, `MAX_ITEMS`, `REGION_CODE`, `QUERIES` (separated by `|`), `ENGLISH_ONLY` (set to `false` to include every language and any channel), and `CHANNELS` (your own channel list, names separated by `|`), and `SAME_TRAILER_DAYS` (how close together two uploads of one movie must be to count as the same trailer, default 3).
 
 ## Running locally
 

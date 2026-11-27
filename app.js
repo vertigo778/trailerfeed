@@ -16,6 +16,13 @@
     for (const [u, sec] of units) if (Math.abs(s) >= sec) return rtf.format(Math.round(s / sec), u);
     return "just now";
   }
+  function releaseText(d) {
+    if (!d) return "";
+    const date = new Date(d + "T12:00:00Z");
+    if (isNaN(date)) return "";
+    const fmt = date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+    return (date > Date.now() ? "In theaters " : "Released ") + fmt;
+  }
   const isNew = (iso) => Date.now() - new Date(iso) < 2 * 864e5;
 
   function play(t, { autoplay = false, scroll = false } = {}) {
@@ -32,6 +39,14 @@
     $("hero-label").textContent = t === trailers[0] ? "Newest trailer" : "Now playing";
     $("hero-title").textContent = t.title;
     $("hero-sub").textContent = `${t.channelTitle} · ${fmtViews(t.views)} · ${ago(t.publishedAt)}`;
+    const rel = releaseText(t.releaseDate);
+    if (rel) {
+      const span = document.createElement("span");
+      span.className = "release"; span.textContent = ` · ${rel}`;
+      $("hero-sub").appendChild(span);
+    }
+    $("hero-summary").textContent = t.summary || "";
+    $("hero-summary").hidden = !t.summary;
     document.title = `${t.title} · Trailer Feed`;
     history.replaceState(null, "", t === trailers[0] ? location.pathname + location.search : `#v=${t.id}`);
     renderGrid();
@@ -58,6 +73,11 @@
       }
       b.querySelector("h3").textContent = t.title;
       b.querySelector("p").textContent = `${t.channelTitle} · ${fmtViews(t.views)} · ${ago(t.publishedAt)}`;
+      if (t.summary) {
+        const sum = document.createElement("p");
+        sum.className = "card-summary"; sum.textContent = t.summary;
+        b.appendChild(sum);
+      }
       b.addEventListener("click", () => play(t, { autoplay: true, scroll: true }));
       li.appendChild(b);
       grid.appendChild(li);

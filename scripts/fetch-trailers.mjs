@@ -22,6 +22,26 @@ export const CONFIG = {
   regionCode: process.env.REGION_CODE || "US",
   // Keep only English-language trailers. Set ENGLISH_ONLY=false to allow every language.
   englishOnly: (process.env.ENGLISH_ONLY || "true").toLowerCase() !== "false",
+  // A trailer uploaded within this many days of another upload of the same movie counts as the
+  // same trailer (re-uploads by other channels). Uploads further apart are new versions and both stay.
+  sameTrailerDays: Number(process.env.SAME_TRAILER_DAYS || 3),
+  // In English-only mode, trailers must come from one of these US studio, streamer or trailer
+  // channels (exact name, any case).
+  // Uploaders' language tags proved unreliable, so a list of studio and trailer channels is the
+  // dependable signal. Override with the CHANNELS variable (names separated by |).
+  channels: (process.env.CHANNELS || [
+    // Studios and distributors
+    "Marvel Entertainment", "Warner Bros. Pictures", "Warner Bros.", "Universal Pictures", "Sony Pictures Entertainment",
+    "Sony Pictures Classics", "Sony Pictures Animation", "Paramount Pictures", "20th Century Studios", "Walt Disney Studios",
+    "Disney", "Pixar", "Lucasfilm", "Star Wars", "Lionsgate Movies", "Lionsgate", "A24", "NEON", "Focus Features",
+    "Searchlight Pictures", "Bleecker Street", "Angel Studios", "Amazon MGM Studios", "Blumhouse", "DreamWorks Animation",
+    "Illumination", "Legendary", "Roadside Attractions", "IFC Films", "Magnolia Pictures", "MUBI", "STXfilms",
+    "Vertical", "Briarcliff Entertainment",
+    // Streamers
+    "Netflix", "Prime Video", "Apple TV", "HBO Max", "Max", "Peacock", "Hulu",
+    // Trailer channels
+    "IGN", "Rotten Tomatoes Trailers", "KinoCheck.com", "FilmSelect Trailer", "Fandango", "Movieclips Trailers",
+  ].join("|")).split("|").map((c) => c.trim().toLowerCase()).filter(Boolean),
   // Each search.list call costs 100 quota units (free quota is 10,000/day).
   queries: (process.env.QUERIES || "official trailer|official teaser trailer|movie trailer 2026|final trailer")
     .split("|").map((q) => q.trim()).filter(Boolean),
@@ -46,9 +66,10 @@ export function isTrailer(snippet) {
 // English if YouTube says so; if the uploader set no language, require a mostly Latin-script, non-dubbed title.
 const NON_EN_TITLE = /\b(dublado|legendado|doblad[oa]|subtitulado|finaler trailer|trailer finale?|bande[\s-]annonce|tráiler|trailer oficial|tamil|telugu|hindi|malayalam|kannada|marathi|bengali|punjabi|dub(bed)?)\b/i;
 const NON_EN_CHANNEL = /\b(music|india|tamil|telugu|malayalam|kannada|hindi|marathi|bollywood|tollywood|kollywood|brasil|latino|españa|mexico|deutschland|italia|france|indonesia|mena)\b/i;
-export function isEnglish(t) {
+export function isEnglish(t, config = CONFIG) {
+  if (config.channels?.length && !config.channels.includes((t.channelTitle || "").trim().toLowerCase())) return false;
   const lang = (t.audioLanguage || t.language || "").toLowerCase();
-  if (lang) return lang.startsWith("en");
+  if (lang && !lang.startsWith("en")) return false;
   if (NON_EN_TITLE.test(t.title) || NON_EN_CHANNEL.test(t.channelTitle || "")) return false;
   const letters = t.title.match(/\p{L}/gu) || [];
   const latin = letters.filter((c) => /\p{Script=Latin}/u.test(c)).length;
@@ -57,30 +78,71 @@ export function isEnglish(t) {
 
 // A rough "which movie is this" key, so dubs and regional uploads of one trailer collapse to one entry.
 const TRAILER_WORDS = /\b(official|final|new|exclusive|international|teaser|trailer|tráiler|movie|film|hd|4k|\d{4})\b/gi;
-export function movieKey(title) {
-  const t = title.toLowerCase().replace(/\(.*?\)|\[.*?\]/g, " ");
-  const cut = t.search(/\b(official|final|new|exclusive|international|teaser|trailer)\b/);
+// The movie's name as written in the title, e.g. "Avengers: Doomsday" from
+// "Avengers: Doomsday | Final Trailer | In Theaters December 18".
+export function movieName(title) {
+  const t = title.replace(/\(.*?\)|\[.*?\]/g, " ");
+  const cut = t.search(/\b(official|final|new|exclusive|international|teaser|trailer)\b/i);
   let base = cut > 0 ? t.slice(0, cut) : "";
   if (!base.replace(/[^\p{L}\p{N}]/gu, "")) {
     base = t.split(/\s[|–—-]\s|\|/).map((x) => x.replace(TRAILER_WORDS, "")).find((x) => x.replace(/[^\p{L}\p{N}]/gu, "")) || t;
   }
-  return base.replace(/\b(movie|film)\b/g, " ").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  return base.replace(/\b(movie|film)\b/gi, " ").replace(/[\s|–—:-]+$/u, "").replace(/^[\s|–—:-]+/u, "").replace(/\s+/g, " ").trim();
 }
 
-// Keep only the most viewed upload for each movie. Two keys count as the same movie when they differ
-// only by numbers (e.g. "avengers doomsday" and "avengers 5 doomsday").
+export function movieKey(title) {
+  return movieName(title).toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+}
+
+// A short summary from the video description, for when TMDB has nothing: the first paragraph
+// that reads like prose (no links, hashtags, credits or "subscribe" lines).
+export function summaryFromDescription(desc = "") {
+  const junk = /https?:\/\/|www\.|#\w|@\w|subscribe|follow us|like us|download|tickets|in theaters|in cinemas|only in|streaming|©|℗|all rights reserved|directed by|starring|written by|produced by|rated |^\s*[A-Z][A-Za-z ]{0,25}:\s*$/i;
+  const paras = String(desc).split(/\n\s*\n/).map((p) => p.split("\n").filter((l) => !junk.test(l)).join(" ").replace(/\s+/g, " ").trim());
+  const prose = paras.find((p) => p.length >= 60 && /[.!?]["”’)]?$/.test(p) && !/^[A-Z0-9\s\W]+$/.test(p));
+  if (!prose) return "";
+  return prose.length > 420 ? prose.slice(0, prose.lastIndexOf(" ", 410)) + "…" : prose;
+}
+
+// Look up the movie on TMDB (free API key, optional) for its official overview and release date.
+export async function lookupMovie(name, { tmdbKey, fetchFn = fetch, now = new Date() }) {
+  if (!tmdbKey || !name) return null;
+  const url = new URL("https://api.themoviedb.org/3/search/movie");
+  url.searchParams.set("query", name);
+  url.searchParams.set("language", "en-US");
+  url.searchParams.set("include_adult", "false");
+  const bearer = tmdbKey.length > 40; // v4 read access token vs v3 api key
+  if (!bearer) url.searchParams.set("api_key", tmdbKey);
+  const res = await fetchFn(url, bearer ? { headers: { Authorization: `Bearer ${tmdbKey}` } } : undefined);
+  if (!res.ok) throw new Error(`TMDB search failed (${res.status})`);
+  const { results = [] } = await res.json();
+  const norm = (x) => x.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const minYear = now.getUTCFullYear() - 1;
+  const recent = results.filter((m) => m.overview && (!m.release_date || Number(m.release_date.slice(0, 4)) >= minYear));
+  const pick = recent.find((m) => norm(m.title) === norm(name)) || recent.sort((a, b) => b.popularity - a.popularity)[0];
+  return pick ? { movieTitle: pick.title, summary: pick.overview, releaseDate: pick.release_date || "", tmdbId: pick.id } : null;
+}
+
+// Two keys name the same movie when they differ only by numbers ("avengers doomsday" and
+// "avengers 5 doomsday").
 function sameMovie(a, b) {
   if (a === b) return true;
   const [x, y] = [a.split(" "), b.split(" ")].sort((p, q) => p.length - q.length);
   return x.length >= 2 && x.every((w) => y.includes(w)) && y.every((w) => x.includes(w) || /^\d+$/.test(w));
 }
-export function dedupe(list) {
-  const groups = [];
+
+// Collapse re-uploads of one trailer (same movie, published within a few days of each other) to the
+// most viewed upload. A newer trailer for the same movie, weeks later, is a new version and stays.
+export function dedupe(list, config = CONFIG) {
+  const windowMs = (config.sameTrailerDays ?? 3) * 864e5;
+  const kept = [];
   for (const t of [...list].sort((a, b) => b.views - a.views)) {
     const k = movieKey(t.title);
-    if (!groups.some((g) => sameMovie(g, k))) groups.push(k), (t._keep = true);
+    const dup = kept.some((o) => sameMovie(o.key, k) && Math.abs(new Date(o.t.publishedAt) - new Date(t.publishedAt)) <= windowMs);
+    if (!dup) kept.push({ key: k, t });
   }
-  return list.filter((t) => t._keep && delete t._keep);
+  const keep = new Set(kept.map((o) => o.t));
+  return list.filter((t) => keep.has(t));
 }
 
 function decode(s) {
@@ -127,7 +189,7 @@ export async function findTrailers({ apiKey, fetchFn = fetch, now = new Date(), 
     });
     for (const v of res.items || []) found.push(toTrailer(v));
   }
-  return found.filter((t) => t.embeddable && t.views >= config.minViews && isTrailer(t) && (!config.englishOnly || isEnglish(t)));
+  return found.filter((t) => t.embeddable && t.views >= config.minViews && isTrailer(t) && (!config.englishOnly || isEnglish(t, config)));
 }
 
 function toTrailer(v) {
@@ -144,6 +206,7 @@ function toTrailer(v) {
     embeddable: v.status?.embeddable !== false,
     audioLanguage: s.defaultAudioLanguage || "",
     language: s.defaultLanguage || "",
+    descriptionSummary: summaryFromDescription(decode(s.description || "")),
   };
 }
 
@@ -157,10 +220,30 @@ export function merge(existing, fresh, { now = new Date(), config = CONFIG } = {
   const cutoff = now - config.keepDays * 864e5;
   // Re-check older entries too, so tightening the rules also cleans the existing feed.
   const kept = [...byId.values()].filter((t) =>
-    new Date(t.publishedAt) >= cutoff && isTrailer(t) && (!config.englishOnly || isEnglish(t)));
-  return dedupe(kept)
+    new Date(t.publishedAt) >= cutoff && isTrailer(t) && (!config.englishOnly || isEnglish(t, config)));
+  return dedupe(kept, config)
     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
     .slice(0, config.maxItems);
+}
+
+// Fill in each trailer's movie summary: TMDB's overview when a TMDB key is set (looked up once per
+// movie and kept), otherwise the first prose paragraph of the YouTube description.
+export async function addSummaries(trailers, { tmdbKey, fetchFn = fetch, now = new Date() } = {}) {
+  const cache = new Map();
+  for (const t of trailers) if (t.tmdbId) cache.set(movieKey(t.title), t);
+  for (const t of trailers) {
+    if (!t.tmdbId && tmdbKey) {
+      const key = movieKey(t.title);
+      if (!cache.has(key)) {
+        try { cache.set(key, await lookupMovie(movieName(t.title), { tmdbKey, fetchFn, now })); }
+        catch (e) { console.warn(e.message); cache.set(key, null); }
+      }
+      const m = cache.get(key);
+      if (m) Object.assign(t, { movieTitle: m.movieTitle, summary: m.summary, releaseDate: m.releaseDate, tmdbId: m.tmdbId });
+    }
+    if (!t.summary && t.descriptionSummary) t.summary = t.descriptionSummary;
+  }
+  return trailers;
 }
 
 async function main() {
@@ -173,6 +256,7 @@ async function main() {
   try { current = JSON.parse(await readFile(DATA_FILE, "utf8")); } catch {}
   const fresh = await findTrailers({ apiKey, refreshIds: (current.trailers || []).map((t) => t.id) });
   const trailers = merge(current.trailers || [], fresh);
+  await addSummaries(trailers, { tmdbKey: process.env.TMDB_API_KEY });
   const out = { updatedAt: new Date().toISOString(), count: trailers.length, trailers };
   await writeFile(DATA_FILE, JSON.stringify(out, null, 2) + "\n");
   console.log(`Found ${fresh.length} popular trailers this run; feed now has ${trailers.length}.`);
