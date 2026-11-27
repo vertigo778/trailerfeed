@@ -1,0 +1,70 @@
+{
+  "updatedAt": "2026-11-27T21:00:00Z",
+  "note": "Made-up sample data for local previews only. Video ids are fake, so the player shows 'unavailable'.",
+  "count": 7,
+  "trailers": [
+    {
+      "id": "SAMPLE00000",
+      "title": "Starfall | Official Trailer",
+      "channelTitle": "Northlight Pictures",
+      "publishedAt": "2026-11-27T12:48:00Z",
+      "views": 2400000,
+      "likes": 60000,
+      "thumbnail": "https://picsum.photos/seed/trailer0/640/360"
+    },
+    {
+      "id": "SAMPLE00001",
+      "title": "The Long Quiet \u2013 Official Teaser",
+      "channelTitle": "Harbor Films",
+      "publishedAt": "2026-11-26T15:12:00Z",
+      "views": 880000,
+      "likes": 22000,
+      "thumbnail": "https://picsum.photos/seed/trailer1/640/360"
+    },
+    {
+      "id": "SAMPLE00002",
+      "title": "Midnight Courier | Official Trailer 2",
+      "channelTitle": "Atlas Studios",
+      "publishedAt": "2026-11-25T08:00:00Z",
+      "views": 5100000,
+      "likes": 127500,
+      "thumbnail": "https://picsum.photos/seed/trailer2/640/360"
+    },
+    {
+      "id": "SAMPLE00003",
+      "title": "Paper Kingdoms - Official Trailer",
+      "channelTitle": "Lantern Animation",
+      "publishedAt": "2026-11-24T00:48:00Z",
+      "views": 640000,
+      "likes": 16000,
+      "thumbnail": "https://picsum.photos/seed/trailer3/640/360"
+    },
+    {
+      "id": "SAMPLE00004",
+      "title": "Undertow | Final Trailer",
+      "channelTitle": "Riverside Releasing",
+      "publishedAt": "2026-11-22T17:36:00Z",
+      "views": 1300000,
+      "likes": 32500,
+      "thumbnail": "https://picsum.photos/seed/trailer4/640/360"
+    },
+    {
+      "id": "SAMPLE00005",
+      "title": "Glass Orchard (2027) Official Trailer",
+      "channelTitle": "Meridian",
+      "publishedAt": "2026-11-19T20:00:00Z",
+      "views": 310000,
+      "likes": 7750,
+      "thumbnail": "https://picsum.photos/seed/trailer5/640/360"
+    },
+    {
+      "id": "SAMPLE00006",
+      "title": "Iron Weather | Official Trailer",
+      "channelTitle": "Northlight Pictures",
+      "publishedAt": "2026-11-16T20:00:00Z",
+      "views": 3700000,
+      "likes": 92500,
+      "thumbnail": "https://picsum.photos/seed/trailer6/640/360"
+    }
+  ]
+}
