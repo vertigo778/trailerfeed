@@ -120,7 +120,8 @@ export async function lookupMovie(name, { tmdbKey, fetchFn = fetch, now = new Da
   const minYear = now.getUTCFullYear() - 1;
   const recent = (list, dateKey) => list.filter((m) => !m[dateKey] || Number(m[dateKey].slice(0, 4)) >= minYear);
   // Only trust an exact title match: a fuzzy "most popular" pick was often the wrong film.
-  const pick = recent(results, "release_date").find((m) => m.overview && norm(m.title) === norm(name));
+  // Exact title match, ignoring numbering ("Avengers 5: Doomsday" is "Avengers: Doomsday").
+  const pick = recent(results, "release_date").find((m) => m.overview && sameMovie(norm(m.title), norm(name)));
   if (pick) return { movieTitle: pick.title, summary: pick.overview, releaseDate: pick.release_date || "", tmdbId: pick.id };
   // No movie by that name: if it's a TV show, say so, so the feed can leave it out.
   const tvUrl = new URL(url);
@@ -135,7 +136,7 @@ export async function lookupMovie(name, { tmdbKey, fetchFn = fetch, now = new Da
 
 // Two keys name the same movie when they differ only by numbers ("avengers doomsday" and
 // "avengers 5 doomsday").
-function sameMovie(a, b) {
+export function sameMovie(a, b) {
   if (a === b) return true;
   const [x, y] = [a.split(" "), b.split(" ")].sort((p, q) => p.length - q.length);
   return x.length >= 2 && x.every((w) => y.includes(w)) && y.every((w) => x.includes(w) || /^\d+$/.test(w));
@@ -243,7 +244,7 @@ export async function addSummaries(trailers, { tmdbKey, fetchFn = fetch, now = n
   const norm = (x) => x.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   for (const t of trailers) {
     // Forget earlier lookups that didn't match the movie's name exactly, so they're redone.
-    if (t.tmdbId && norm(t.movieTitle || "") !== norm(movieName(t.title))) {
+    if (t.tmdbId && !sameMovie(norm(t.movieTitle || ""), norm(movieName(t.title)))) {
       for (const k of ["movieTitle", "summary", "releaseDate", "tmdbId"]) delete t[k];
     }
     if (t.tmdbId) cache.set(movieKey(t.title), t);

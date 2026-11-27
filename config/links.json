@@ -1,0 +1,25 @@
+{
+  "_readme": "Buttons shown under each trailer. {query} is replaced with the movie name (URL-encoded). To earn commission, swap a url for your affiliate link once you're approved, e.g. a Fandango link from the Fandango affiliate program, keeping {query} where the search term goes. Set \"enabled\": false to hide a button.",
+  "siteUrl": "https://trailerfeed.elandassani.workers.dev",
+  "tickets": {
+    "enabled": true,
+    "label": "Get tickets",
+    "url": "https://www.fandango.com/search?q={query}&mode=all",
+    "showFromDaysBeforeRelease": 60,
+    "showUntilDaysAfterRelease": 75
+  },
+  "streaming": {
+    "Netflix": { "label": "Watch on Netflix", "url": "https://www.netflix.com/search?q={query}" },
+    "Prime Video": { "label": "Watch on Prime Video", "url": "https://www.amazon.com/s?k={query}&i=instant-video" },
+    "Apple TV": { "label": "Watch on Apple TV", "url": "https://tv.apple.com/search?term={query}" },
+    "HBO Max": { "label": "Watch on HBO Max", "url": "https://play.hbomax.com/search?q={query}" },
+    "Max": { "label": "Watch on HBO Max", "url": "https://play.hbomax.com/search?q={query}" },
+    "Peacock": { "label": "Watch on Peacock", "url": "https://www.peacocktv.com/search?q={query}" },
+    "Hulu": { "label": "Watch on Hulu", "url": "https://www.hulu.com/search?q={query}" }
+  },
+  "whereToWatch": {
+    "enabled": true,
+    "label": "Where to watch",
+    "url": "https://www.justwatch.com/us/search?q={query}"
+  }
+}

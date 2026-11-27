@@ -23,6 +23,22 @@
     const fmt = date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
     return (date > Date.now() ? "In theaters " : "Released ") + fmt;
   }
+  // Ticket / watch buttons (from config/links.json via the daily build) and the movie page link.
+  function renderActions(el, t, withPage) {
+    el.innerHTML = "";
+    for (const l of t.links || []) {
+      const a = document.createElement("a");
+      a.className = `btn btn-${l.kind}`; a.href = l.url; a.textContent = l.label;
+      a.target = "_blank"; a.rel = "sponsored noopener";
+      el.appendChild(a);
+    }
+    if (withPage && t.movieSlug) {
+      const a = document.createElement("a");
+      a.className = "btn btn-page"; a.href = `movies/${encodeURIComponent(t.movieSlug)}/`; a.textContent = "Movie page";
+      el.appendChild(a);
+    }
+    el.hidden = !el.children.length;
+  }
   const isNew = (iso) => Date.now() - new Date(iso) < 2 * 864e5;
 
   function play(t, { autoplay = false, scroll = false } = {}) {
@@ -47,6 +63,7 @@
     }
     $("hero-summary").textContent = t.summary || "";
     $("hero-summary").hidden = !t.summary;
+    renderActions($("hero-actions"), t, true);
     document.title = `${t.title} · Trailer Feed`;
     history.replaceState(null, "", t === trailers[0] ? location.pathname + location.search : `#v=${t.id}`);
     renderGrid();

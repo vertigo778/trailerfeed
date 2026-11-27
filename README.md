@@ -10,6 +10,8 @@ _headers                          cache rules for Cloudflare
 wrangler.jsonc, .assetsignore     Cloudflare Workers config (static files, plus branch previews)
 data/trailers.json                the feed (written by the Action)
 scripts/fetch-trailers.mjs        the daily YouTube search (Node 20+, no dependencies)
+scripts/build-pages.mjs           builds movies/<slug>/ pages, sitemap.xml and robots.txt
+config/links.json                 "Get tickets" / "Watch on" / "Where to watch" button links
 scripts/test/                     unit tests and sample data for local previews
 .github/workflows/update-trailers.yml   the daily job
 ```
@@ -83,6 +85,22 @@ Trailers stay in the feed for 60 days, up to 120 at a time, newest first. Each r
 
 You can tune this without editing code by adding repository **variables** (**Settings → Secrets and variables → Actions → Variables**), which the workflow already passes through: `SEARCH_WINDOW_DAYS`, `KEEP_DAYS`, `MIN_VIEWS`, `MAX_ITEMS`, `REGION_CODE`, `QUERIES` (separated by `|`), `ENGLISH_ONLY` (set to `false` to include every language and any channel), and `CHANNELS` (your own channel list, names separated by `|`), and `SAME_TRAILER_DAYS` (how close together two uploads of one movie must be to count as the same trailer, default 3).
 
+## Movie pages and buttons
+
+After each daily fetch, `scripts/build-pages.mjs` writes one page per movie at `/movies/<slug>/`. Each page has the trailer, summary and release date, a proper title and description, Open Graph and Twitter tags for link previews, and schema.org `Movie` data for search engines. It also writes `sitemap.xml` and `robots.txt`. Submit `https://<your-site>/sitemap.xml` in [Google Search Console](https://search.google.com/search-console) so the pages get indexed.
+
+Buttons come from `config/links.json`:
+
+- **Get tickets** (Fandango search) shows from 60 days before release until 75 days after, for theatrical movies.
+- **Watch on Netflix / Prime Video / Apple TV / ...** shows for trailers posted by that streamer.
+- **Where to watch** (JustWatch search) shows once a movie is released.
+
+To earn commission, sign up for the affiliate programs (Fandango's runs through its affiliate network, and JustWatch and the streamers have their own). Then replace the `url` values with your affiliate links, keeping `{query}` where the movie name goes. All button links carry `rel="sponsored"`, as search engines require for paid links. Set `siteUrl` (or the `SITE_URL` repo variable) if you move to your own domain.
+
+Two things to check before making money from the site:
+- TMDB's free API is for non-commercial use. A site with affiliate links or ads needs TMDB's commercial terms, or you can drop `TMDB_API_KEY` and use YouTube descriptions only.
+- Keep ads and overlays off the YouTube player. YouTube's terms don't allow covering or wrapping the embed.
+
 ## Running locally
 
 The page loads JSON with `fetch`, so serve the folder rather than opening the file directly:
@@ -92,7 +110,7 @@ python3 -m http.server 8000
 # open http://localhost:8000/
 ```
 
-Before the first Action run the feed is empty. To preview the layout with made-up sample data (fake video ids, so the player says the video is unavailable), open:
+Before the first Action run the feed is empty. Run `node scripts/build-pages.mjs` to build the movie pages from the current data. To preview the layout with made-up sample data (fake video ids, so the player says the video is unavailable), open:
 
 ```
 http://localhost:8000/?data=scripts/test/sample-trailers.json
