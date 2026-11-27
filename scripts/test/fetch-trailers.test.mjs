@@ -158,3 +158,41 @@ test("addSummaries uses TMDB once per movie, then falls back to the description"
   await addSummaries(noKey, {});
   assert.equal(noKey[0].summary, "Fallback.");
 });
+
+import { CATEGORIES, dropWrongFeed, lookupMovie } from "../fetch-trailers.mjs";
+
+test("each feed keeps its own kind of trailer", () => {
+  const ok = (title, channelTitle, cat) => isTrailer({ title, channelTitle }, CATEGORIES[cat]);
+  assert.ok(ok("The Bear Season 5 | Official Trailer", "FX Networks", "tv"));
+  assert.ok(!ok("The Bear Season 5 | Official Trailer", "FX Networks", "movies"));
+  assert.ok(ok("Marvel 1943 - Official Gameplay Trailer | PS5 Games", "PlayStation", "games"));
+  assert.ok(!ok("Marvel 1943 - Official Gameplay Trailer | PS5 Games", "PlayStation", "tv"));
+  // IGN posts everything, so in the TV and game feeds its titles must say what they are.
+  assert.ok(!ok("Dune: Part Three - Exclusive Teaser Trailer", "IGN", "games"));
+  assert.ok(!ok("Dune: Part Three - Exclusive Teaser Trailer", "IGN", "tv"));
+  assert.ok(ok("Ghost of Yotei - Official Launch Trailer", "IGN", "games"));
+  assert.ok(ok("Dune: Part Three - Exclusive Teaser Trailer", "IGN", "movies"));
+  assert.equal(movieName("The Bear Season 5 | Official Trailer"), "The Bear");
+});
+
+test("dropWrongFeed removes TV from movies, non-English originals and unknown streamer titles", () => {
+  const list = () => [
+    { id: "a", channelTitle: "Marvel Entertainment", tmdbId: 1, originalLanguage: "en" },
+    { id: "b", channelTitle: "Netflix", isTv: true },
+    { id: "c", channelTitle: "Netflix", tmdbId: 2, originalLanguage: "hi" },
+    { id: "d", channelTitle: "Netflix" },
+    { id: "e", channelTitle: "NEON" },
+  ];
+  assert.deepEqual(dropWrongFeed(list(), CATEGORIES.movies, "key").map((t) => t.id), ["a", "e"]);
+  assert.deepEqual(dropWrongFeed(list(), CATEGORIES.movies, "").map((t) => t.id), ["a", "c", "d", "e"]);
+  assert.deepEqual(dropWrongFeed([{ id: "f", isMovie: true }], CATEGORIES.tv, "key"), []);
+});
+
+test("TV lookups use TMDB's TV search and flag films", async () => {
+  const fetchFn = async (url) => ({ ok: true, json: async () => ({ results: url.pathname.endsWith("/tv")
+    ? (url.searchParams.get("query") === "The Bear" ? [{ id: 7, name: "The Bear", overview: "A chef.", first_air_date: "2022-06-23", original_language: "en" }] : [])
+    : [{ id: 8, title: "Some Film", overview: "x", release_date: "2026-05-01" }] }) });
+  const show = await lookupMovie("The Bear", { tmdbKey: "k", fetchFn, now: new Date("2026-11-27"), type: "tv" });
+  assert.deepEqual(show, { movieTitle: "The Bear", summary: "A chef.", releaseDate: "2022-06-23", tmdbId: 7, originalLanguage: "en" });
+  assert.deepEqual(await lookupMovie("Some Film", { tmdbKey: "k", fetchFn, now: new Date("2026-11-27"), type: "tv" }), { isMovie: true });
+});

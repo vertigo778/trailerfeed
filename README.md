@@ -1,6 +1,6 @@
 # Trailer Feed
 
-A static website that shows the newest popular movie trailers from YouTube. The newest trailer is embedded at the top of the page; the rest are listed below, sortable by newest or most viewed.
+A static website that shows the newest popular movie, TV and video game trailers from YouTube, in three tabs. The newest trailer is embedded at the top of the page; the rest are listed below, sortable by newest or most viewed.
 
 There is no server. A GitHub Action runs once a day, asks the YouTube Data API for new popular official trailers, and commits the results to `data/trailers.json`. Cloudflare Pages (or GitHub Pages) serves the site, which reads that file.
 
@@ -68,6 +68,18 @@ Cloudflare redeploys on every push to `main`, including the daily data commit, s
 **Actions → Update trailers → Run workflow**. After that it runs daily at 09:17 UTC. Each run commits the updated `data/trailers.json`, and Cloudflare (or GitHub Pages) republishes automatically.
 
 If the workflow can't push, check **Settings → Actions → General → Workflow permissions** and choose **Read and write permissions**.
+
+## Movies, TV and Games tabs
+
+The daily job fills three feeds: `data/trailers.json` (movies), `data/tv.json` and `data/games.json`. Each one has its own searches, its own channel list and its own filters, set in `CATEGORIES` in `scripts/fetch-trailers.mjs`:
+
+- **TV:** channels are streamers and networks (Netflix, HBO Max, Apple TV, Prime Video, Disney+, Hulu, FX, AMC...). Summaries come from TMDB's TV search, and anything TMDB knows only as a film is dropped.
+- **Games:** channels are publishers and platforms (PlayStation, Xbox, Nintendo of America, Ubisoft, EA, Rockstar, Capcom...). Summaries come from YouTube descriptions, and there are no store buttons yet.
+- IGN, GameSpot and the other trailer channels post every kind of trailer. In the TV and Games tabs, their uploads only count when the title says what they are ("Season 2", "Gameplay Trailer", "PS5"...).
+
+All three feeds together use about 1,100 of the 10,000 free YouTube API units a day. The repo variables `TV_CHANNELS`, `GAMES_CHANNELS`, `TV_QUERIES`, `GAMES_QUERIES`, `TV_MIN_VIEWS` and `GAMES_MIN_VIEWS` override the defaults. Pages are built at `/tv/<slug>/` and `/games/<slug>/` too.
+
+English-only also checks TMDB's original language. A streamer title that isn't originally in English is dropped, and so is a streamer upload TMDB can't identify.
 
 ## How trailers are picked
 
