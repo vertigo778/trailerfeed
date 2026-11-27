@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Trailer Feed</title>
+  <meta name="description" content="The newest popular movie trailers, updated daily.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="./">Trailer Feed</a>
+    <span class="updated" id="updated"></span>
+  </header>
+
+  <main>
+    <section class="hero" id="hero" aria-live="polite">
+      <div class="player" id="player"><div class="player-empty">Loading the newest trailer…</div></div>
+      <div class="hero-meta">
+        <p class="eyebrow" id="hero-label">Newest trailer</p>
+        <h1 id="hero-title"></h1>
+        <p class="sub" id="hero-sub"></p>
+      </div>
+    </section>
+
+    <section class="feed">
+      <div class="feed-head">
+        <h2>More trailers</h2>
+        <div class="sort" role="group" aria-label="Sort trailers">
+          <button type="button" data-sort="newest" aria-pressed="true">Newest</button>
+          <button type="button" data-sort="popular" aria-pressed="false">Most viewed</button>
+        </div>
+      </div>
+      <ol class="grid" id="grid"></ol>
+    </section>
+  </main>
+
+  <footer class="foot">Trailers are embedded from YouTube. The list updates once a day.</footer>
+  <script src="app.js"></script>
+</body>
+</html>

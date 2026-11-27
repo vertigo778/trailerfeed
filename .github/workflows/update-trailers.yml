@@ -1,0 +1,47 @@
+name: Update trailers
+
+on:
+  schedule:
+    - cron: "17 9 * * *" # daily at 09:17 UTC
+  workflow_dispatch: # lets you run it by hand from the Actions tab
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-trailers
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Fetch new popular trailers
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          # Optional tuning via Settings > Secrets and variables > Actions > Variables (see README)
+          SEARCH_WINDOW_DAYS: ${{ vars.SEARCH_WINDOW_DAYS }}
+          KEEP_DAYS: ${{ vars.KEEP_DAYS }}
+          MIN_VIEWS: ${{ vars.MIN_VIEWS }}
+          MAX_ITEMS: ${{ vars.MAX_ITEMS }}
+          REGION_CODE: ${{ vars.REGION_CODE }}
+          QUERIES: ${{ vars.QUERIES }}
+        run: node scripts/fetch-trailers.mjs
+
+      - name: Commit data if it changed
+        run: |
+          if git diff --quiet -- data/trailers.json; then
+            echo "No changes."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
+          git add data/trailers.json
+          git commit -m "Update trailers $(date -u +%Y-%m-%d)"
+          git push
