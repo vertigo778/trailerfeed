@@ -97,7 +97,7 @@ export function movieKey(title) {
 // A short summary from the video description, for when TMDB has nothing: the first paragraph
 // that reads like prose (no links, hashtags, credits or "subscribe" lines).
 export function summaryFromDescription(desc = "") {
-  const junk = /https?:\/\/|www\.|#\w|@\w|subscribe|follow us|like us|download|tickets|in theaters|in cinemas|only in|streaming|©|℗|all rights reserved|directed by|starring|written by|produced by|rated |^\s*[A-Z][A-Za-z ]{0,25}:\s*$/i;
+  const junk = /https?:\/\/|www\.|#\w|@\w|subscribe|follow us|leading entertainment service|netflix is|about netflix|like us|download|tickets|in theaters|in cinemas|only in|streaming|©|℗|all rights reserved|directed by|starring|written by|produced by|rated |^\s*[A-Z][A-Za-z ]{0,25}:\s*$/i;
   const paras = String(desc).split(/\n\s*\n/).map((p) => p.split("\n").filter((l) => !junk.test(l)).join(" ").replace(/\s+/g, " ").trim());
   const prose = paras.find((p) => p.length >= 60 && /[.!?]["”’)]?$/.test(p) && !/^[A-Z0-9\s\W]+$/.test(p));
   if (!prose) return "";
@@ -118,9 +118,19 @@ export async function lookupMovie(name, { tmdbKey, fetchFn = fetch, now = new Da
   const { results = [] } = await res.json();
   const norm = (x) => x.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   const minYear = now.getUTCFullYear() - 1;
-  const recent = results.filter((m) => m.overview && (!m.release_date || Number(m.release_date.slice(0, 4)) >= minYear));
-  const pick = recent.find((m) => norm(m.title) === norm(name)) || recent.sort((a, b) => b.popularity - a.popularity)[0];
-  return pick ? { movieTitle: pick.title, summary: pick.overview, releaseDate: pick.release_date || "", tmdbId: pick.id } : null;
+  const recent = (list, dateKey) => list.filter((m) => !m[dateKey] || Number(m[dateKey].slice(0, 4)) >= minYear);
+  // Only trust an exact title match: a fuzzy "most popular" pick was often the wrong film.
+  const pick = recent(results, "release_date").find((m) => m.overview && norm(m.title) === norm(name));
+  if (pick) return { movieTitle: pick.title, summary: pick.overview, releaseDate: pick.release_date || "", tmdbId: pick.id };
+  // No movie by that name: if it's a TV show, say so, so the feed can leave it out.
+  const tvUrl = new URL(url);
+  tvUrl.pathname = "/3/search/tv";
+  const tvRes = await fetchFn(tvUrl, bearer ? { headers: { Authorization: `Bearer ${tmdbKey}` } } : undefined);
+  if (tvRes.ok) {
+    const { results: shows = [] } = await tvRes.json();
+    if (recent(shows, "first_air_date").some((m) => norm(m.name || "") === norm(name))) return { isTv: true };
+  }
+  return null;
 }
 
 // Two keys name the same movie when they differ only by numbers ("avengers doomsday" and
@@ -230,7 +240,14 @@ export function merge(existing, fresh, { now = new Date(), config = CONFIG } = {
 // movie and kept), otherwise the first prose paragraph of the YouTube description.
 export async function addSummaries(trailers, { tmdbKey, fetchFn = fetch, now = new Date() } = {}) {
   const cache = new Map();
-  for (const t of trailers) if (t.tmdbId) cache.set(movieKey(t.title), t);
+  const norm = (x) => x.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  for (const t of trailers) {
+    // Forget earlier lookups that didn't match the movie's name exactly, so they're redone.
+    if (t.tmdbId && norm(t.movieTitle || "") !== norm(movieName(t.title))) {
+      for (const k of ["movieTitle", "summary", "releaseDate", "tmdbId"]) delete t[k];
+    }
+    if (t.tmdbId) cache.set(movieKey(t.title), t);
+  }
   for (const t of trailers) {
     if (!t.tmdbId && tmdbKey) {
       const key = movieKey(t.title);
@@ -239,9 +256,13 @@ export async function addSummaries(trailers, { tmdbKey, fetchFn = fetch, now = n
         catch (e) { console.warn(e.message); cache.set(key, null); }
       }
       const m = cache.get(key);
-      if (m) Object.assign(t, { movieTitle: m.movieTitle, summary: m.summary, releaseDate: m.releaseDate, tmdbId: m.tmdbId });
+      if (m?.isTv) t.isTv = true;
+      else if (m) Object.assign(t, { movieTitle: m.movieTitle, summary: m.summary, releaseDate: m.releaseDate, tmdbId: m.tmdbId });
     }
-    if (!t.summary && t.descriptionSummary) t.summary = t.descriptionSummary;
+    if (!t.tmdbId) {
+      if (t.descriptionSummary) t.summary = t.descriptionSummary;
+      else delete t.summary;
+    }
   }
   return trailers;
 }
@@ -257,6 +278,8 @@ async function main() {
   const fresh = await findTrailers({ apiKey, refreshIds: (current.trailers || []).map((t) => t.id) });
   const trailers = merge(current.trailers || [], fresh);
   await addSummaries(trailers, { tmdbKey: process.env.TMDB_API_KEY });
+  // Movies only: drop trailers TMDB identifies as TV shows (streamers post both).
+  for (let i = trailers.length - 1; i >= 0; i--) if (trailers[i].isTv) trailers.splice(i, 1);
   const out = { updatedAt: new Date().toISOString(), count: trailers.length, trailers };
   await writeFile(DATA_FILE, JSON.stringify(out, null, 2) + "\n");
   console.log(`Found ${fresh.length} popular trailers this run; feed now has ${trailers.length}.`);

@@ -122,13 +122,18 @@ test("summaryFromDescription keeps the plot paragraph and drops promo lines", ()
   const d = "The end is near.\n\nIn a world shattered by Doctor Doom, the Avengers must reunite to stop a threat to every reality.\n\nSubscribe: https://youtube.com/x\n#Avengers";
   assert.equal(summaryFromDescription(d), "In a world shattered by Doctor Doom, the Avengers must reunite to stop a threat to every reality.");
   assert.equal(summaryFromDescription("Watch now! https://x.com #movie"), "");
+  assert.equal(summaryFromDescription("Netflix is one of the world’s leading entertainment services with over 300 million paid memberships in over 190 countries."), "");
 });
 
 test("addSummaries uses TMDB once per movie, then falls back to the description", async () => {
   const calls = [];
   const fetchFn = async (url) => {
-    calls.push(url.searchParams.get("query"));
-    const results = url.searchParams.get("query") === "Avengers: Doomsday"
+    const q = url.searchParams.get("query");
+    if (url.pathname.endsWith("/tv")) {
+      return { ok: true, json: async () => ({ results: q === "The Murder Case" ? [{ name: "The Murder Case", first_air_date: "2026-11-30" }] : [] }) };
+    }
+    calls.push(q);
+    const results = q === "Avengers: Doomsday"
       ? [{ id: 1, title: "Avengers: Doomsday", overview: "Doom arrives.", release_date: "2026-12-18", popularity: 99 },
          { id: 2, title: "Avengers: Doomsday Fan Cut", overview: "x", release_date: "2026-01-01", popularity: 1 }]
       : [];
@@ -138,9 +143,14 @@ test("addSummaries uses TMDB once per movie, then falls back to the description"
     { id: "a", title: "Avengers: Doomsday | Final Trailer", descriptionSummary: "Desc A." },
     { id: "b", title: "Avengers: Doomsday | Official Trailer", descriptionSummary: "Desc B." },
     { id: "c", title: "Paper Tiger - Final Trailer", descriptionSummary: "Two brothers chase a dream." },
+    { id: "d", title: "The Murder Case | Official Trailer", descriptionSummary: "Netflix boilerplate." },
+    { id: "e", title: "TIMBERLAKE — Official Trailer", movieTitle: "Justin Timberlake: Iconic", tmdbId: 9, summary: "Wrong film." },
   ];
   await addSummaries(trailers, { tmdbKey: "k", fetchFn, now: new Date("2026-11-27") });
-  assert.deepEqual(calls, ["Avengers: Doomsday", "Paper Tiger"]);
+  assert.deepEqual(calls, ["Avengers: Doomsday", "Paper Tiger", "The Murder Case", "TIMBERLAKE"]);
+  assert.equal(trailers[3].isTv, true);
+  assert.equal(trailers[4].tmdbId, undefined); // stale fuzzy match cleared
+  assert.equal(trailers[4].summary, undefined);
   assert.equal(trailers[0].summary, "Doom arrives.");
   assert.equal(trailers[1].releaseDate, "2026-12-18");
   assert.equal(trailers[2].summary, "Two brothers chase a dream.");
