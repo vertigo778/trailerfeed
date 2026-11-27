@@ -53,15 +53,54 @@ test("findTrailers surfaces API errors clearly", async () => {
 
 test("merge refreshes view counts, drops expired trailers and sorts newest first", () => {
   const existing = [
-    { id: "old", title: "Old", publishedAt: "2026-08-01T00:00:00Z", views: 9 },
-    { id: "a", title: "A", publishedAt: "2026-11-20T00:00:00Z", views: 100 },
+    { id: "old", title: "Old | Official Trailer", publishedAt: "2026-08-01T00:00:00Z", views: 9 },
+    { id: "a", title: "Alpha | Official Trailer", publishedAt: "2026-11-20T00:00:00Z", views: 100 },
   ];
   const fresh = [
-    { id: "a", title: "A", publishedAt: "2026-11-20T00:00:00Z", views: 500, embeddable: true },
-    { id: "b", title: "B", publishedAt: "2026-11-26T00:00:00Z", views: 300, embeddable: true },
+    { id: "a", title: "Alpha | Official Trailer", publishedAt: "2026-11-20T00:00:00Z", views: 500, embeddable: true },
+    { id: "b", title: "Bravo | Official Trailer", publishedAt: "2026-11-26T00:00:00Z", views: 300, embeddable: true },
   ];
   const out = merge(existing, fresh, { now, config: cfg });
   assert.deepEqual(out.map((t) => t.id), ["b", "a"]);
   assert.equal(out[1].views, 500);
   assert.equal("embeddable" in out[0], false);
+});
+
+import { isEnglish, movieKey, dedupe } from "../fetch-trailers.mjs";
+
+test("isTrailer drops fan commentary, clickbait, games and music", () => {
+  for (const title of [
+    "Marvel is hiding someone in Doomsday trailer!",
+    "SPIDER-MAN HIDDEN IN AVENGERS DOOMSDAY FINAL TRAILER🔥😱",
+    "ANÁLISE DO TRAILER FINAL DE VINGADORES DOOMSDAY",
+    "TOP FAN REACTIONS | AVENGERS DOOMSDAY FINAL TRAILER",
+    "Barkley | Poppy Playtime Chapter 6 Teaser Trailer",
+    "LNGSHOT - 'Beep Beep' Official MV Teaser",
+    "OFFICIAL TEASER | Magic Lover Series",
+    "Inji Vellam - Notion Trailer | Vijay Sethupathi",
+  ]) assert.ok(!isTrailer({ title, channelTitle: "x" }), title);
+  assert.ok(isTrailer({ title: "Avengers: Doomsday | Final Trailer | In Theaters December 18", channelTitle: "Marvel Entertainment" }));
+});
+
+test("isEnglish uses YouTube's language when set, otherwise the title and channel", () => {
+  assert.ok(isEnglish({ title: "Anything", audioLanguage: "en-US" }));
+  assert.ok(!isEnglish({ title: "Vrushakarma Official Trailer", audioLanguage: "te" }));
+  assert.ok(isEnglish({ title: "Dune: Part Three - Exclusive Teaser Trailer (2026)", channelTitle: "IGN" }));
+  assert.ok(isEnglish({ title: "Avengers: Doomsday | Final Trailer", channelTitle: "Marvel Entertainment" }));
+  assert.ok(!isEnglish({ title: "Vingadores - Doutor Destino | Trailer Final Dublado", channelTitle: "ingresso.com" }));
+  assert.ok(!isEnglish({ title: "K-POP: THE DEBUT | Official Trailer 케이팝 슈퍼스타 | 공식 예고편", channelTitle: "Paramount" }));
+  assert.ok(!isEnglish({ title: "Cosmic Samson Trailer", channelTitle: "Think Music India" }));
+});
+
+test("dedupe keeps the most viewed upload of each movie", () => {
+  assert.equal(movieKey("Avengers: Doomsday | Final Trailer | In Cinemas December 17"), "avengers doomsday");
+  assert.equal(movieKey("Official Trailer - Chaalchitro: The Ekchala Murders | Tota"), "chaalchitro the ekchala murders");
+  const list = [
+    { id: "a", title: "Avengers: Doomsday | Final Trailer | Marvel BE", views: 800 },
+    { id: "b", title: "Avengers: Doomsday | Final Trailer | In Theaters December 18", views: 66000 },
+    { id: "c", title: "AVENGERS 5: DOOMSDAY Official Final Trailer (2026) Marvel", views: 500 },
+    { id: "d", title: "Hail Mary - Official Trailer", views: 10 },
+    { id: "e", title: "Project Hail Mary | Official Trailer", views: 20 },
+  ];
+  assert.deepEqual(dedupe(list).map((t) => t.id), ["b", "d", "e"]);
 });
