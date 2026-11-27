@@ -96,15 +96,16 @@ test("isEnglish requires a listed channel, then checks language, title and chann
   assert.ok(!isEnglish({ title: "Cosmic Samson Trailer", channelTitle: "Think Music India" }, { channels: [] }));
 });
 
-test("dedupe keeps the most viewed upload of each movie", () => {
+test("dedupe collapses re-uploads of one trailer but keeps new versions", () => {
   assert.equal(movieKey("Avengers: Doomsday | Final Trailer | In Cinemas December 17"), "avengers doomsday");
   assert.equal(movieKey("Official Trailer - Chaalchitro: The Ekchala Murders | Tota"), "chaalchitro the ekchala murders");
   const list = [
-    { id: "a", title: "Avengers: Doomsday | Final Trailer | Marvel BE", views: 800 },
-    { id: "b", title: "Avengers: Doomsday | Final Trailer | In Theaters December 18", views: 66000 },
-    { id: "c", title: "AVENGERS 5: DOOMSDAY Official Final Trailer (2026) Marvel", views: 500 },
-    { id: "d", title: "Hail Mary - Official Trailer", views: 10 },
-    { id: "e", title: "Project Hail Mary | Official Trailer", views: 20 },
+    { id: "a", title: "Avengers: Doomsday | Final Trailer | Marvel BE", views: 800, publishedAt: "2026-11-23T15:00:00Z" },
+    { id: "b", title: "Avengers: Doomsday | Final Trailer | In Theaters December 18", views: 66000, publishedAt: "2026-11-23T14:00:00Z" },
+    { id: "c", title: "AVENGERS 5: DOOMSDAY Official Final Trailer (2026) Marvel", views: 500, publishedAt: "2026-11-24T09:00:00Z" },
+    { id: "d", title: "Hail Mary - Official Trailer", views: 10, publishedAt: "2026-11-23T00:00:00Z" },
+    { id: "e", title: "Project Hail Mary | Official Trailer", views: 20, publishedAt: "2026-11-23T00:00:00Z" },
+    { id: "f", title: "Avengers: Doomsday | Official Trailer", views: 90000, publishedAt: "2026-10-20T14:00:00Z" },
   ];
-  assert.deepEqual(dedupe(list).map((t) => t.id), ["b", "d", "e"]);
+  assert.deepEqual(dedupe(list, { sameTrailerDays: 3 }).map((t) => t.id), ["b", "d", "e", "f"]);
 });

@@ -22,7 +22,11 @@ export const CONFIG = {
   regionCode: process.env.REGION_CODE || "US",
   // Keep only English-language trailers. Set ENGLISH_ONLY=false to allow every language.
   englishOnly: (process.env.ENGLISH_ONLY || "true").toLowerCase() !== "false",
-  // In English-only mode, trailers must come from one of these channels (exact name, any case).
+  // A trailer uploaded within this many days of another upload of the same movie counts as the
+  // same trailer (re-uploads by other channels). Uploads further apart are new versions and both stay.
+  sameTrailerDays: Number(process.env.SAME_TRAILER_DAYS || 3),
+  // In English-only mode, trailers must come from one of these US studio, streamer or trailer
+  // channels (exact name, any case).
   // Uploaders' language tags proved unreliable, so a list of studio and trailer channels is the
   // dependable signal. Override with the CHANNELS variable (names separated by |).
   channels: (process.env.CHANNELS || [
@@ -32,7 +36,7 @@ export const CONFIG = {
     "Disney", "Pixar", "Lucasfilm", "Star Wars", "Lionsgate Movies", "Lionsgate", "A24", "NEON", "Focus Features",
     "Searchlight Pictures", "Bleecker Street", "Angel Studios", "Amazon MGM Studios", "Blumhouse", "DreamWorks Animation",
     "Illumination", "Legendary", "Roadside Attractions", "IFC Films", "Magnolia Pictures", "MUBI", "STXfilms",
-    "Vertical", "Briarcliff Entertainment", "Sony Pictures Releasing UK", "Universal Pictures UK", "Warner Bros. UK & Ireland",
+    "Vertical", "Briarcliff Entertainment",
     // Streamers
     "Netflix", "Prime Video", "Apple TV", "HBO Max", "Max", "Peacock", "Hulu",
     // Trailer channels
@@ -84,20 +88,26 @@ export function movieKey(title) {
   return base.replace(/\b(movie|film)\b/g, " ").replace(/[^\p{L}\p{N}]+/gu, " ").trim();
 }
 
-// Keep only the most viewed upload for each movie. Two keys count as the same movie when they differ
-// only by numbers (e.g. "avengers doomsday" and "avengers 5 doomsday").
+// Two keys name the same movie when they differ only by numbers ("avengers doomsday" and
+// "avengers 5 doomsday").
 function sameMovie(a, b) {
   if (a === b) return true;
   const [x, y] = [a.split(" "), b.split(" ")].sort((p, q) => p.length - q.length);
   return x.length >= 2 && x.every((w) => y.includes(w)) && y.every((w) => x.includes(w) || /^\d+$/.test(w));
 }
-export function dedupe(list) {
-  const groups = [];
+
+// Collapse re-uploads of one trailer (same movie, published within a few days of each other) to the
+// most viewed upload. A newer trailer for the same movie, weeks later, is a new version and stays.
+export function dedupe(list, config = CONFIG) {
+  const windowMs = (config.sameTrailerDays ?? 3) * 864e5;
+  const kept = [];
   for (const t of [...list].sort((a, b) => b.views - a.views)) {
     const k = movieKey(t.title);
-    if (!groups.some((g) => sameMovie(g, k))) groups.push(k), (t._keep = true);
+    const dup = kept.some((o) => sameMovie(o.key, k) && Math.abs(new Date(o.t.publishedAt) - new Date(t.publishedAt)) <= windowMs);
+    if (!dup) kept.push({ key: k, t });
   }
-  return list.filter((t) => t._keep && delete t._keep);
+  const keep = new Set(kept.map((o) => o.t));
+  return list.filter((t) => keep.has(t));
 }
 
 function decode(s) {
@@ -175,7 +185,7 @@ export function merge(existing, fresh, { now = new Date(), config = CONFIG } = {
   // Re-check older entries too, so tightening the rules also cleans the existing feed.
   const kept = [...byId.values()].filter((t) =>
     new Date(t.publishedAt) >= cutoff && isTrailer(t) && (!config.englishOnly || isEnglish(t, config)));
-  return dedupe(kept)
+  return dedupe(kept, config)
     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
     .slice(0, config.maxItems);
 }
