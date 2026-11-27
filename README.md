@@ -6,7 +6,8 @@ There is no server. A GitHub Action runs once a day, asks the YouTube Data API f
 
 ```
 index.html, style.css, app.js     the site
-_headers                          cache rules for Cloudflare Pages
+_headers                          cache rules for Cloudflare
+wrangler.jsonc, .assetsignore     Cloudflare Workers config (serves this folder as static files)
 data/trailers.json                the feed (written by the Action)
 scripts/fetch-trailers.mjs        the daily YouTube search (Node 20+, no dependencies)
 scripts/test/                     unit tests and sample data for local previews
