@@ -38,14 +38,19 @@ jobs:
           SAME_TRAILER_DAYS: ${{ vars.SAME_TRAILER_DAYS }}
         run: node scripts/fetch-trailers.mjs
 
+      - name: Build movie pages and sitemap
+        env:
+          SITE_URL: ${{ vars.SITE_URL }}
+        run: node scripts/build-pages.mjs
+
       - name: Commit data if it changed
         run: |
-          if git diff --quiet -- data/trailers.json; then
+          git add -A data movies sitemap.xml robots.txt
+          if git diff --cached --quiet; then
             echo "No changes."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898333+github-actions[bot]@users.noreply.github.com"
-          git add data/trailers.json
           git commit -m "Update trailers $(date -u +%Y-%m-%d)"
           git push
