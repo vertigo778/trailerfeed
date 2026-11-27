@@ -34,6 +34,16 @@ In your GitHub repo: **Settings → Secrets and variables → Actions → New re
 
 The key is only ever read by the Action. It never goes into the site or the repo.
 
+### 2b. (Optional) TMDB key for movie summaries
+
+Each trailer shows a short plot summary. Without a TMDB key, it comes from the first plot-like paragraph of the YouTube description, which many uploads don't have. With a key, it comes from [The Movie Database](https://www.themoviedb.org/), which also adds the release date.
+
+1. Create a free account at themoviedb.org, then go to **Settings → API** and request an API key (choose "Developer", personal use).
+2. Copy the **API Key** (or the longer **API Read Access Token**; either works).
+3. Add it as a repository secret named `TMDB_API_KEY`.
+
+Each movie is looked up once and the result is kept, so this uses very few requests.
+
 ### 3. Host it: Cloudflare Pages (recommended) or GitHub Pages
 
 The site is plain files with relative paths, so either host works, and both can run at once. Both are free.

@@ -109,3 +109,42 @@ test("dedupe collapses re-uploads of one trailer but keeps new versions", () => 
   ];
   assert.deepEqual(dedupe(list, { sameTrailerDays: 3 }).map((t) => t.id), ["b", "d", "e", "f"]);
 });
+
+import { movieName, summaryFromDescription, addSummaries } from "../fetch-trailers.mjs";
+
+test("movieName pulls the movie out of a trailer title", () => {
+  assert.equal(movieName("Avengers: Doomsday | Final Trailer | In Theaters December 18"), "Avengers: Doomsday");
+  assert.equal(movieName("Dune: Part Three - Exclusive Teaser Trailer (2026) Timothée Chalamet"), "Dune: Part Three");
+  assert.equal(movieName("Mr. Irrelevant | New Trailer (2026 Movie) - David Corenswet"), "Mr. Irrelevant");
+});
+
+test("summaryFromDescription keeps the plot paragraph and drops promo lines", () => {
+  const d = "The end is near.\n\nIn a world shattered by Doctor Doom, the Avengers must reunite to stop a threat to every reality.\n\nSubscribe: https://youtube.com/x\n#Avengers";
+  assert.equal(summaryFromDescription(d), "In a world shattered by Doctor Doom, the Avengers must reunite to stop a threat to every reality.");
+  assert.equal(summaryFromDescription("Watch now! https://x.com #movie"), "");
+});
+
+test("addSummaries uses TMDB once per movie, then falls back to the description", async () => {
+  const calls = [];
+  const fetchFn = async (url) => {
+    calls.push(url.searchParams.get("query"));
+    const results = url.searchParams.get("query") === "Avengers: Doomsday"
+      ? [{ id: 1, title: "Avengers: Doomsday", overview: "Doom arrives.", release_date: "2026-12-18", popularity: 99 },
+         { id: 2, title: "Avengers: Doomsday Fan Cut", overview: "x", release_date: "2026-01-01", popularity: 1 }]
+      : [];
+    return { ok: true, json: async () => ({ results }) };
+  };
+  const trailers = [
+    { id: "a", title: "Avengers: Doomsday | Final Trailer", descriptionSummary: "Desc A." },
+    { id: "b", title: "Avengers: Doomsday | Official Trailer", descriptionSummary: "Desc B." },
+    { id: "c", title: "Paper Tiger - Final Trailer", descriptionSummary: "Two brothers chase a dream." },
+  ];
+  await addSummaries(trailers, { tmdbKey: "k", fetchFn, now: new Date("2026-11-27") });
+  assert.deepEqual(calls, ["Avengers: Doomsday", "Paper Tiger"]);
+  assert.equal(trailers[0].summary, "Doom arrives.");
+  assert.equal(trailers[1].releaseDate, "2026-12-18");
+  assert.equal(trailers[2].summary, "Two brothers chase a dream.");
+  const noKey = [{ id: "d", title: "X | Trailer", descriptionSummary: "Fallback." }];
+  await addSummaries(noKey, {});
+  assert.equal(noKey[0].summary, "Fallback.");
+});

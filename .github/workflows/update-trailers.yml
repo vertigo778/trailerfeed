@@ -25,6 +25,7 @@ jobs:
       - name: Fetch new popular trailers
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }} # optional, for movie summaries
           # Optional tuning via Settings > Secrets and variables > Actions > Variables (see README)
           SEARCH_WINDOW_DAYS: ${{ vars.SEARCH_WINDOW_DAYS }}
           KEEP_DAYS: ${{ vars.KEEP_DAYS }}

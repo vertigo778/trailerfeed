@@ -10,7 +10,9 @@
       "publishedAt": "2026-11-27T12:48:00Z",
       "views": 2400000,
       "likes": 60000,
-      "thumbnail": "https://picsum.photos/seed/trailer0/640/360"
+      "thumbnail": "https://picsum.photos/seed/trailer0/640/360",
+      "summary": "A stranded astronaut and a rival crew race to reach the last working beacon before a solar storm cuts off Earth for a decade. Made-up sample text.",
+      "releaseDate": "2027-03-12"
     },
     {
       "id": "SAMPLE00001",
@@ -28,7 +30,8 @@
       "publishedAt": "2026-11-25T08:00:00Z",
       "views": 5100000,
       "likes": 127500,
-      "thumbnail": "https://picsum.photos/seed/trailer2/640/360"
+      "thumbnail": "https://picsum.photos/seed/trailer2/640/360",
+      "summary": "A night courier discovers the package she's carrying is wanted by three different cities. Made-up sample text."
     },
     {
       "id": "SAMPLE00003",
