@@ -22,6 +22,22 @@ export const CONFIG = {
   regionCode: process.env.REGION_CODE || "US",
   // Keep only English-language trailers. Set ENGLISH_ONLY=false to allow every language.
   englishOnly: (process.env.ENGLISH_ONLY || "true").toLowerCase() !== "false",
+  // In English-only mode, trailers must come from one of these channels (exact name, any case).
+  // Uploaders' language tags proved unreliable, so a list of studio and trailer channels is the
+  // dependable signal. Override with the CHANNELS variable (names separated by |).
+  channels: (process.env.CHANNELS || [
+    // Studios and distributors
+    "Marvel Entertainment", "Warner Bros. Pictures", "Warner Bros.", "Universal Pictures", "Sony Pictures Entertainment",
+    "Sony Pictures Classics", "Sony Pictures Animation", "Paramount Pictures", "20th Century Studios", "Walt Disney Studios",
+    "Disney", "Pixar", "Lucasfilm", "Star Wars", "Lionsgate Movies", "Lionsgate", "A24", "NEON", "Focus Features",
+    "Searchlight Pictures", "Bleecker Street", "Angel Studios", "Amazon MGM Studios", "Blumhouse", "DreamWorks Animation",
+    "Illumination", "Legendary", "Roadside Attractions", "IFC Films", "Magnolia Pictures", "MUBI", "STXfilms",
+    "Vertical", "Briarcliff Entertainment", "Sony Pictures Releasing UK", "Universal Pictures UK", "Warner Bros. UK & Ireland",
+    // Streamers
+    "Netflix", "Prime Video", "Apple TV", "HBO Max", "Max", "Peacock", "Hulu",
+    // Trailer channels
+    "IGN", "Rotten Tomatoes Trailers", "KinoCheck.com", "FilmSelect Trailer", "Fandango", "Movieclips Trailers",
+  ].join("|")).split("|").map((c) => c.trim().toLowerCase()).filter(Boolean),
   // Each search.list call costs 100 quota units (free quota is 10,000/day).
   queries: (process.env.QUERIES || "official trailer|official teaser trailer|movie trailer 2026|final trailer")
     .split("|").map((q) => q.trim()).filter(Boolean),
@@ -46,9 +62,10 @@ export function isTrailer(snippet) {
 // English if YouTube says so; if the uploader set no language, require a mostly Latin-script, non-dubbed title.
 const NON_EN_TITLE = /\b(dublado|legendado|doblad[oa]|subtitulado|finaler trailer|trailer finale?|bande[\s-]annonce|tráiler|trailer oficial|tamil|telugu|hindi|malayalam|kannada|marathi|bengali|punjabi|dub(bed)?)\b/i;
 const NON_EN_CHANNEL = /\b(music|india|tamil|telugu|malayalam|kannada|hindi|marathi|bollywood|tollywood|kollywood|brasil|latino|españa|mexico|deutschland|italia|france|indonesia|mena)\b/i;
-export function isEnglish(t) {
+export function isEnglish(t, config = CONFIG) {
+  if (config.channels?.length && !config.channels.includes((t.channelTitle || "").trim().toLowerCase())) return false;
   const lang = (t.audioLanguage || t.language || "").toLowerCase();
-  if (lang) return lang.startsWith("en");
+  if (lang && !lang.startsWith("en")) return false;
   if (NON_EN_TITLE.test(t.title) || NON_EN_CHANNEL.test(t.channelTitle || "")) return false;
   const letters = t.title.match(/\p{L}/gu) || [];
   const latin = letters.filter((c) => /\p{Script=Latin}/u.test(c)).length;
@@ -127,7 +144,7 @@ export async function findTrailers({ apiKey, fetchFn = fetch, now = new Date(), 
     });
     for (const v of res.items || []) found.push(toTrailer(v));
   }
-  return found.filter((t) => t.embeddable && t.views >= config.minViews && isTrailer(t) && (!config.englishOnly || isEnglish(t)));
+  return found.filter((t) => t.embeddable && t.views >= config.minViews && isTrailer(t) && (!config.englishOnly || isEnglish(t, config)));
 }
 
 function toTrailer(v) {
@@ -157,7 +174,7 @@ export function merge(existing, fresh, { now = new Date(), config = CONFIG } = {
   const cutoff = now - config.keepDays * 864e5;
   // Re-check older entries too, so tightening the rules also cleans the existing feed.
   const kept = [...byId.values()].filter((t) =>
-    new Date(t.publishedAt) >= cutoff && isTrailer(t) && (!config.englishOnly || isEnglish(t)));
+    new Date(t.publishedAt) >= cutoff && isTrailer(t) && (!config.englishOnly || isEnglish(t, config)));
   return dedupe(kept)
     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
     .slice(0, config.maxItems);

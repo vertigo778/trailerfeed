@@ -4,7 +4,7 @@ import assert from "node:assert/strict";
 import { findTrailers, merge, isTrailer } from "../fetch-trailers.mjs";
 
 const now = new Date("2026-11-27T12:00:00Z");
-const cfg = { searchWindowDays: 7, keepDays: 60, minViews: 100000, maxItems: 120, regionCode: "US", queries: ["official trailer"] };
+const cfg = { channels: [], searchWindowDays: 7, keepDays: 60, minViews: 100000, maxItems: 120, regionCode: "US", queries: ["official trailer"] };
 
 function mockFetch(searchItems, videoItems) {
   const calls = [];
@@ -82,14 +82,18 @@ test("isTrailer drops fan commentary, clickbait, games and music", () => {
   assert.ok(isTrailer({ title: "Avengers: Doomsday | Final Trailer | In Theaters December 18", channelTitle: "Marvel Entertainment" }));
 });
 
-test("isEnglish uses YouTube's language when set, otherwise the title and channel", () => {
-  assert.ok(isEnglish({ title: "Anything", audioLanguage: "en-US" }));
-  assert.ok(!isEnglish({ title: "Vrushakarma Official Trailer", audioLanguage: "te" }));
-  assert.ok(isEnglish({ title: "Dune: Part Three - Exclusive Teaser Trailer (2026)", channelTitle: "IGN" }));
-  assert.ok(isEnglish({ title: "Avengers: Doomsday | Final Trailer", channelTitle: "Marvel Entertainment" }));
-  assert.ok(!isEnglish({ title: "Vingadores - Doutor Destino | Trailer Final Dublado", channelTitle: "ingresso.com" }));
-  assert.ok(!isEnglish({ title: "K-POP: THE DEBUT | Official Trailer 케이팝 슈퍼스타 | 공식 예고편", channelTitle: "Paramount" }));
-  assert.ok(!isEnglish({ title: "Cosmic Samson Trailer", channelTitle: "Think Music India" }));
+test("isEnglish requires a listed channel, then checks language, title and channel", () => {
+  const studios = { channels: ["marvel entertainment", "netflix"] };
+  assert.ok(isEnglish({ title: "Avengers: Doomsday | Final Trailer", channelTitle: "Marvel Entertainment", audioLanguage: "en" }, studios));
+  assert.ok(!isEnglish({ title: "Cosmic Samson Trailer", channelTitle: "Think Music India", audioLanguage: "en" }, studios));
+  assert.ok(!isEnglish({ title: "Vrushakarma Official Trailer", channelTitle: "Sri Venkateswara Creations" }, studios));
+  assert.ok(isEnglish({ title: "Anything", audioLanguage: "en-US" }, { channels: [] }));
+  assert.ok(!isEnglish({ title: "Vrushakarma Official Trailer", audioLanguage: "te" }, { channels: [] }));
+  assert.ok(isEnglish({ title: "Dune: Part Three - Exclusive Teaser Trailer (2026)", channelTitle: "IGN" }, { channels: [] }));
+  assert.ok(isEnglish({ title: "Avengers: Doomsday | Final Trailer", channelTitle: "Marvel Entertainment" }, { channels: [] }));
+  assert.ok(!isEnglish({ title: "Vingadores - Doutor Destino | Trailer Final Dublado", channelTitle: "ingresso.com" }, { channels: [] }));
+  assert.ok(!isEnglish({ title: "K-POP: THE DEBUT | Official Trailer 케이팝 슈퍼스타 | 공식 예고편", channelTitle: "Paramount" }, { channels: [] }));
+  assert.ok(!isEnglish({ title: "Cosmic Samson Trailer", channelTitle: "Think Music India" }, { channels: [] }));
 });
 
 test("dedupe keeps the most viewed upload of each movie", () => {
