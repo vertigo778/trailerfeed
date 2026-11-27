@@ -1,7 +1,0 @@
-.git
-.github
-scripts
-node_modules
-wrangler.jsonc
-.assetsignore
-README.md

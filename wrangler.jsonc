@@ -1,8 +1,0 @@
-// Cloudflare Workers config: serves this folder as a static site (no Worker code).
-{
-  "name": "trailerfeed",
-  "compatibility_date": "2025-09-01",
-  "assets": {
-    "directory": "."
-  }
-}
