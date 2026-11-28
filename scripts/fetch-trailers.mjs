@@ -18,11 +18,11 @@ export const CONFIG = {
   tmdbType: "movie",
   // How far back each daily search looks for new uploads.
   searchWindowDays: Number(process.env.SEARCH_WINDOW_DAYS || 7),
-  // How long a trailer stays in the feed.
-  keepDays: Number(process.env.KEEP_DAYS || 60),
+  // How long a trailer stays in the feed. The site groups trailers by week, so history is kept.
+  keepDays: Number(process.env.KEEP_DAYS || 182),
   // A trailer must have at least this many views to count as "popular".
   minViews: Number(process.env.MIN_VIEWS || 100000),
-  maxItems: Number(process.env.MAX_ITEMS || 120),
+  maxItems: Number(process.env.MAX_ITEMS || 1000),
   regionCode: process.env.REGION_CODE || "US",
   // Keep only English-language trailers. Set ENGLISH_ONLY=false to allow every language.
   englishOnly: (process.env.ENGLISH_ONLY || "true").toLowerCase() !== "false",
@@ -267,31 +267,58 @@ async function api(fetchFn, endpoint, params) {
   return body;
 }
 
-export async function findTrailers({ apiKey, fetchFn = fetch, now = new Date(), config = CONFIG, refreshIds = [] }) {
-  const publishedAfter = new Date(now - config.searchWindowDays * 864e5).toISOString();
-  const ids = new Set();
-  for (const q of config.queries) {
-    const res = await api(fetchFn, "search", {
-      key: apiKey, part: "snippet", q, type: "video", order: "viewCount",
-      publishedAfter, maxResults: 50, regionCode: config.regionCode,
-      relevanceLanguage: "en", videoEmbeddable: "true", safeSearch: "moderate",
-    });
-    for (const item of res.items || []) {
-      if (item.id?.videoId && isTrailer(item.snippet, config)) ids.add(item.id.videoId);
+// The time windows to search, newest first. Normally just the last searchWindowDays. A backfill
+// (BACKFILL_WEEKS="1-6") searches each of those past weeks instead, one week per window, so every
+// week gets its own 50 most-viewed results. Each search costs 100 of the 10,000 daily quota units.
+export function searchWindows(now = new Date(), { searchWindowDays = 7, backfill = "" } = {}) {
+  const m = String(backfill || "").trim().match(/^(\d+)(?:\s*-\s*(\d+))?$/);
+  if (!m) return [[new Date(now - searchWindowDays * 864e5), null]];
+  const from = Number(m[1]), to = Number(m[2] || m[1]);
+  const out = [];
+  for (let w = Math.min(from, to); w <= Math.max(from, to); w++) {
+    out.push([new Date(now - (w + 1) * 7 * 864e5), new Date(now - w * 7 * 864e5)]);
+  }
+  return out;
+}
+
+const isQuota = (e) => /\((403|429)\).*quota/i.test(e?.message || "");
+
+export async function findTrailers({ apiKey, fetchFn = fetch, now = new Date(), config = CONFIG, refreshIds = [], backfill = "" }) {
+  const seen = new Set();
+  const found = [];
+  // Look up view counts and embeddability (videos.list costs 1 unit per 50 ids).
+  async function lookup(ids) {
+    const all = [...ids].filter((id) => !seen.has(id));
+    for (const id of all) seen.add(id);
+    for (let i = 0; i < all.length; i += 50) {
+      const res = await api(fetchFn, "videos", {
+        key: apiKey, part: "snippet,statistics,status,contentDetails", id: all.slice(i, i + 50).join(","),
+      });
+      for (const v of res.items || []) found.push(toTrailer(v));
     }
   }
-  // Also re-check trailers already in the feed, to refresh view counts and language.
-  for (const id of refreshIds) ids.add(id);
-  if (!ids.size) return [];
-
-  // Look up view counts and embeddability (videos.list costs 1 unit per 50 ids).
-  const all = [...ids];
-  const found = [];
-  for (let i = 0; i < all.length; i += 50) {
-    const res = await api(fetchFn, "videos", {
-      key: apiKey, part: "snippet,statistics,status,contentDetails", id: all.slice(i, i + 50).join(","),
-    });
-    for (const v of res.items || []) found.push(toTrailer(v));
+  try {
+    for (const [after, before] of searchWindows(now, { searchWindowDays: config.searchWindowDays, backfill })) {
+      const ids = new Set();
+      for (const q of config.queries) {
+        const res = await api(fetchFn, "search", {
+          key: apiKey, part: "snippet", q, type: "video", order: "viewCount",
+          publishedAfter: after.toISOString(), ...(before ? { publishedBefore: before.toISOString() } : {}),
+          maxResults: 50, regionCode: config.regionCode,
+          relevanceLanguage: "en", videoEmbeddable: "true", safeSearch: "moderate",
+        });
+        for (const item of res.items || []) {
+          if (item.id?.videoId && isTrailer(item.snippet, config)) ids.add(item.id.videoId);
+        }
+      }
+      // Each window is looked up right away, so running out of quota midway keeps earlier weeks.
+      await lookup(ids);
+    }
+    // Also re-check trailers already in the feed, to refresh view counts and language.
+    await lookup(refreshIds);
+  } catch (e) {
+    if (!isQuota(e) || !found.length) throw e;
+    console.warn(`${config.category}: YouTube quota ran out, keeping the ${found.length} videos found so far.`);
   }
   return found.filter((t) => t.embeddable && t.views >= config.minViews && isTrailer(t, config) && (!config.englishOnly || isEnglish(t, config)));
 }
@@ -378,11 +405,11 @@ export function dropWrongFeed(trailers, config, tmdbKey) {
   return trailers;
 }
 
-async function updateCategory(config, apiKey, tmdbKey, claimed = new Set()) {
+async function updateCategory(config, apiKey, tmdbKey, claimed = new Set(), backfill = "") {
   const file = path.join(ROOT, "data", config.file);
   let current = { trailers: [] };
   try { current = JSON.parse(await readFile(file, "utf8")); } catch {}
-  const fresh = await findTrailers({ apiKey, config, refreshIds: (current.trailers || []).map((t) => t.id) });
+  const fresh = await findTrailers({ apiKey, config, refreshIds: (current.trailers || []).map((t) => t.id), backfill });
   const trailers = merge(current.trailers || [], fresh, { config });
   await addSummaries(trailers, { tmdbKey, type: config.tmdbType });
   dropWrongFeed(trailers, config, tmdbKey);
@@ -403,7 +430,7 @@ async function main() {
   let failed = 0;
   const claimed = new Set(); // a video appears in one feed only
   for (const config of Object.values(CATEGORIES)) {
-    try { await updateCategory(config, apiKey, process.env.TMDB_API_KEY, claimed); }
+    try { await updateCategory(config, apiKey, process.env.TMDB_API_KEY, claimed, process.env.BACKFILL_WEEKS); }
     catch (e) { failed++; console.error(`${config.category}: ${e.message}`); }
   }
   if (failed === Object.keys(CATEGORIES).length) process.exit(1);

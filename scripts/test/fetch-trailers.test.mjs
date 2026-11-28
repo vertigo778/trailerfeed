@@ -1,7 +1,7 @@
 // Run with: node --test scripts/test/*.test.mjs
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { findTrailers, merge, isTrailer } from "../fetch-trailers.mjs";
+import { findTrailers, merge, isTrailer, searchWindows } from "../fetch-trailers.mjs";
 
 const now = new Date("2026-11-27T12:00:00Z");
 const cfg = { channels: [], searchWindowDays: 7, keepDays: 60, minViews: 100000, maxItems: 120, regionCode: "US", queries: ["official trailer"] };
@@ -44,6 +44,31 @@ test("findTrailers filters by popularity, embeddability and title, and sends the
   assert.equal(search.searchParams.get("order"), "viewCount");
   assert.equal(search.searchParams.get("publishedAfter"), "2026-11-20T12:00:00.000Z");
   assert.equal(fetchFn.calls[1].searchParams.get("id"), "a,b,d"); // reaction never looked up
+});
+
+test("searchWindows covers the last week normally and one window per past week in a backfill", () => {
+  const [[after, before]] = searchWindows(now, { searchWindowDays: 7 });
+  assert.equal(after.toISOString(), "2026-11-20T12:00:00.000Z");
+  assert.equal(before, null);
+  const weeks = searchWindows(now, { backfill: "1-3" });
+  assert.deepEqual(weeks.map(([a, b]) => [a.toISOString().slice(0, 10), b.toISOString().slice(0, 10)]),
+    [["2026-11-13", "2026-11-20"], ["2026-11-06", "2026-11-13"], ["2026-10-30", "2026-11-06"]]);
+  assert.equal(searchWindows(now, { backfill: "2" }).length, 1);
+  assert.equal(searchWindows(now, { backfill: "nonsense" })[0][1], null);
+});
+
+test("a backfill keeps the weeks it finished when the quota runs out", async () => {
+  let searches = 0;
+  const fetchFn = async (url) => {
+    if (url.pathname.endsWith("/search")) {
+      if (++searches > 1) return { ok: false, status: 403, statusText: "Forbidden", json: async () => ({ error: { message: "You have exceeded your quota." } }) };
+      assert.equal(url.searchParams.get("publishedBefore"), "2026-11-20T12:00:00.000Z");
+      return { ok: true, json: async () => ({ items: [s("a", "Movie A | Official Trailer")] }) };
+    }
+    return { ok: true, json: async () => ({ items: [v("a", "Movie A | Official Trailer", 2_000_000, "2026-11-15T10:00:00Z")] }) };
+  };
+  const out = await findTrailers({ apiKey: "K", fetchFn, now, config: cfg, backfill: "1-4" });
+  assert.deepEqual(out.map((t) => t.id), ["a"]);
 });
 
 test("findTrailers surfaces API errors clearly", async () => {

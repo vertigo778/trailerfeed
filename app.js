@@ -77,36 +77,83 @@
     if (scroll) $("hero").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
-  function renderGrid() {
-    const list = [...trailers];
-    if (sort === "popular") list.sort((a, b) => b.views - a.views);
-    const grid = $("grid");
-    grid.innerHTML = "";
-    for (const t of list) {
-      const li = document.createElement("li");
-      const b = document.createElement("button");
-      b.type = "button";
-      b.className = "card" + (t === current ? " playing" : "");
-      b.innerHTML = `<div class="thumb"><img loading="lazy" alt=""></div><h3></h3><p></p>`;
-      b.querySelector("img").onerror = (e) => { e.target.style.visibility = "hidden"; };
-      b.querySelector("img").src = t.thumbnail || `https://i.ytimg.com/vi/${t.id}/hqdefault.jpg`;
-      if (isNew(t.publishedAt)) {
-        const badge = document.createElement("span");
-        badge.className = "badge"; badge.textContent = "New";
-        b.querySelector(".thumb").appendChild(badge);
-      }
-      b.querySelector("h3").textContent = t.title;
-      b.querySelector("p").textContent = `${t.channelTitle} · ${fmtViews(t.views)} · ${ago(t.publishedAt)}`;
-      if (t.summary) {
-        const sum = document.createElement("p");
-        sum.className = "card-summary"; sum.textContent = t.summary;
-        b.appendChild(sum);
-      }
-      b.addEventListener("click", () => play(t, { autoplay: true, scroll: true }));
-      li.appendChild(b);
-      grid.appendChild(li);
-    }
+  // Trailers are grouped by the week they came out (weeks start Monday), newest week first.
+  const WEEKS_PER_PAGE = 4;
+  let weeksShown = WEEKS_PER_PAGE;
+  function weekStart(d) {
+    const x = new Date(d); x.setHours(0, 0, 0, 0);
+    x.setDate(x.getDate() - ((x.getDay() + 6) % 7));
+    return x;
   }
+  function weekLabel(start) {
+    const diff = Math.round((weekStart(Date.now()) - start) / 6048e5);
+    if (diff <= 0) return "This week";
+    if (diff === 1) return "Last week";
+    const opts = { month: "short", day: "numeric", ...(start.getFullYear() !== new Date().getFullYear() ? { year: "numeric" } : {}) };
+    return "Week of " + start.toLocaleDateString("en-US", opts);
+  }
+  function groupByWeek(list) {
+    const weeks = new Map();
+    for (const t of list) {
+      const k = weekStart(t.publishedAt).getTime();
+      if (!weeks.has(k)) weeks.set(k, []);
+      weeks.get(k).push(t);
+    }
+    return [...weeks.entries()].sort((a, b) => b[0] - a[0]).map(([k, items]) => ({ start: new Date(k), items }));
+  }
+
+  function card(t) {
+    const li = document.createElement("li");
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "card" + (t === current ? " playing" : "");
+    b.innerHTML = `<div class="thumb"><img loading="lazy" alt=""></div><h3></h3><p></p>`;
+    b.querySelector("img").onerror = (e) => { e.target.style.visibility = "hidden"; };
+    b.querySelector("img").src = t.thumbnail || `https://i.ytimg.com/vi/${t.id}/hqdefault.jpg`;
+    if (isNew(t.publishedAt)) {
+      const badge = document.createElement("span");
+      badge.className = "badge"; badge.textContent = "New";
+      b.querySelector(".thumb").appendChild(badge);
+    }
+    b.querySelector("h3").textContent = t.title;
+    b.querySelector("p").textContent = `${t.channelTitle} · ${fmtViews(t.views)} · ${ago(t.publishedAt)}`;
+    if (t.summary) {
+      const sum = document.createElement("p");
+      sum.className = "card-summary"; sum.textContent = t.summary;
+      b.appendChild(sum);
+    }
+    b.addEventListener("click", () => play(t, { autoplay: true, scroll: true }));
+    li.appendChild(b);
+    return li;
+  }
+
+  function renderGrid() {
+    const weeks = groupByWeek(trailers);
+    // Keep the week of the trailer that's playing visible, e.g. when opened from a shared link.
+    const playingWeek = weeks.findIndex((w) => w.items.includes(current));
+    if (playingWeek >= weeksShown) weeksShown = playingWeek + 1;
+    const box = $("weeks");
+    box.innerHTML = "";
+    for (const w of weeks.slice(0, weeksShown)) {
+      const items = [...w.items];
+      if (sort === "popular") items.sort((a, b) => b.views - a.views);
+      const sec = document.createElement("section");
+      sec.className = "week";
+      const h = document.createElement("h3");
+      h.className = "week-head";
+      h.innerHTML = `<span></span> <span class="week-count"></span>`;
+      h.firstChild.textContent = weekLabel(w.start);
+      h.lastChild.textContent = `${items.length} trailer${items.length === 1 ? "" : "s"}`;
+      const ol = document.createElement("ol");
+      ol.className = "grid";
+      for (const t of items) ol.appendChild(card(t));
+      sec.append(h, ol);
+      box.appendChild(sec);
+    }
+    const more = $("more-weeks");
+    more.hidden = weeks.length <= weeksShown;
+  }
+  $("more-weeks").addEventListener("click", () => { weeksShown += WEEKS_PER_PAGE; renderGrid(); });
 
   document.querySelectorAll(".sort button").forEach((btn) =>
     btn.addEventListener("click", () => {
@@ -126,7 +173,7 @@
     document.querySelectorAll(".tabs a").forEach((a) => a.setAttribute("aria-current", String(a.dataset.tab === tab)));
     $("player").innerHTML = `<div class="player-empty">Loading…</div>`;
     $("hero-title").textContent = ""; $("hero-sub").textContent = ""; $("hero-summary").hidden = true; $("hero-actions").hidden = true;
-    $("grid").innerHTML = ""; trailers = [];
+    $("weeks").innerHTML = ""; $("more-weeks").hidden = true; trailers = []; weeksShown = WEEKS_PER_PAGE;
     // ?data=path lets you preview another JSON file locally, e.g. ?data=scripts/test/sample-trailers.json
     const url = params.get("data") || TABS[tab].file;
     fetch(url, { cache: "no-cache" })
