@@ -1,22 +1,18 @@
 {
-  "updatedAt": "2026-11-27T23:10:08.573Z",
-  "count": 7,
+  "updatedAt": "2026-11-28T03:16:56.287Z",
+  "count": 6,
   "trailers": [
     {
       "id": "-l237RK1icA",
       "title": "AVENGERS 5: DOOMSDAY Official “Magneto Removes Doctor Dooms Mask” Teaser Trailer (2026) Marvel",
       "channelTitle": "KinoCheck.com",
       "publishedAt": "2026-11-26T17:14:20Z",
-      "views": 324087,
-      "likes": 2057,
+      "views": 336062,
+      "likes": 2095,
       "thumbnail": "https://i.ytimg.com/vi/-l237RK1icA/maxresdefault.jpg",
       "audioLanguage": "en",
       "language": "en",
       "descriptionSummary": "\"Avengers: Doomsday\" follows beloved heroes from three distinct universes as they’re set on a deadly collision course and face an existential threat unlike anything they’ve ever encountered.",
-      "summary": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
-      "movieTitle": "Avengers: Doomsday",
-      "releaseDate": "2026-12-16",
-      "tmdbId": 1003596,
       "movieSlug": "avengers-doomsday",
       "links": [
         {
@@ -24,23 +20,25 @@
           "label": "Get tickets",
           "url": "https://www.fandango.com/search?q=Avengers%3A%20Doomsday&mode=all"
         }
-      ]
+      ],
+      "movieTitle": "Avengers: Doomsday",
+      "summary": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
+      "releaseDate": "2026-12-16",
+      "tmdbId": 1003596,
+      "originalLanguage": "en",
+      "pagePath": "movies/avengers-doomsday/"
     },
     {
       "id": "dUxQ3ltEEwU",
       "title": "Paper Tiger - Final Trailer - Now Playing In Theaters",
       "channelTitle": "NEON",
       "publishedAt": "2026-11-24T19:31:46Z",
-      "views": 771102,
-      "likes": 758,
+      "views": 829976,
+      "likes": 761,
       "thumbnail": "https://i.ytimg.com/vi/dUxQ3ltEEwU/maxresdefault.jpg",
       "audioLanguage": "en",
       "language": "en",
       "descriptionSummary": "In James Gray’s deeply felt and intense drama, two brothers become entangled in a scheme that turns out to be too good to be true. As they try to navigate their way through the dangerous world of the Russian mafia, family bonds begin to fray with life-altering consequences.",
-      "movieTitle": "Paper Tiger",
-      "summary": "Two brothers become entangled in a scheme that turns out to be too good to be true. As they try to navigate their way through the dangerous world of the Russian mafia, family bonds begin to fray with life-altering consequences.",
-      "releaseDate": "2026-11-13",
-      "tmdbId": 1381273,
       "movieSlug": "paper-tiger",
       "links": [
         {
@@ -53,23 +51,25 @@
           "label": "Where to watch",
           "url": "https://www.justwatch.com/us/search?q=Paper%20Tiger"
         }
-      ]
+      ],
+      "movieTitle": "Paper Tiger",
+      "summary": "Two brothers become entangled in a scheme that turns out to be too good to be true. As they try to navigate their way through the dangerous world of the Russian mafia, family bonds begin to fray with life-altering consequences.",
+      "releaseDate": "2026-11-13",
+      "tmdbId": 1381273,
+      "originalLanguage": "en",
+      "pagePath": "movies/paper-tiger/"
     },
     {
       "id": "ErhPysTk6Jc",
       "title": "Dune: Part Three - Exclusive Teaser Trailer (2026) Timothée Chalamet, Zendaya, Robert Pattinson",
       "channelTitle": "IGN",
       "publishedAt": "2026-11-24T17:00:37Z",
-      "views": 2188454,
-      "likes": 15223,
+      "views": 2198463,
+      "likes": 15238,
       "thumbnail": "https://i.ytimg.com/vi/ErhPysTk6Jc/maxresdefault.jpg",
       "audioLanguage": "en",
       "language": "en",
       "descriptionSummary": "From Warner Bros. Pictures and Legendary Pictures comes Dune: Part Three, bringing Academy Award-nominated filmmaker Denis Villeneuve’s epic trilogy to a breathtaking conclusion.",
-      "movieTitle": "Dune: Part Three",
-      "summary": "Nearly two decades after he seized control of the Imperium, Paul Atreides is now a ruthless Emperor, and must face the consequences of his reign as old allies return, terrifying new threats emerge, and betrayal lurks in every shadow. Haunted by visions of Imperial collapse and the reappearance of his long-lost love, Paul is drawn into a sweeping conspiracy, with Chani at the heart of its unfolding mystery. As enemies close in, Paul must confront the true cost of power and the fate of those he loves the most.",
-      "releaseDate": "2026-12-15",
-      "tmdbId": 1170608,
       "movieSlug": "dune-part-three",
       "links": [
         {
@@ -77,44 +77,25 @@
           "label": "Get tickets",
           "url": "https://www.fandango.com/search?q=Dune%3A%20Part%20Three&mode=all"
         }
-      ]
-    },
-    {
-      "id": "HGY8x0qy0aI",
-      "title": "Jo Bachay Hain Sang Samait Lo | Official Trailer | Netflix",
-      "channelTitle": "Netflix",
-      "publishedAt": "2026-11-24T15:30:00Z",
-      "views": 4183528,
-      "likes": 61425,
-      "thumbnail": "https://i.ytimg.com/vi/HGY8x0qy0aI/maxresdefault.jpg",
-      "audioLanguage": "en-US",
-      "language": "en",
-      "descriptionSummary": "Jo Bachay Hain Sang Samait Lo – All The Love Our Hearts Carry Part 1 premieres globally on Netflix on December 4, with Part 2 coming soon.",
-      "summary": "Jo Bachay Hain Sang Samait Lo – All The Love Our Hearts Carry Part 1 premieres globally on Netflix on December 4, with Part 2 coming soon.",
-      "movieSlug": "jo-bachay-hain-sang-samait-lo",
-      "links": [
-        {
-          "kind": "watch",
-          "label": "Watch on Netflix",
-          "url": "https://www.netflix.com/search?q=Jo%20Bachay%20Hain%20Sang%20Samait%20Lo"
-        }
-      ]
+      ],
+      "movieTitle": "Dune: Part Three",
+      "summary": "Nearly two decades after he seized control of the Imperium, Paul Atreides is now a ruthless Emperor, and must face the consequences of his reign as old allies return, terrifying new threats emerge, and betrayal lurks in every shadow. Haunted by visions of Imperial collapse and the reappearance of his long-lost love, Paul is drawn into a sweeping conspiracy, with Chani at the heart of its unfolding mystery. As enemies close in, Paul must confront the true cost of power and the fate of those he loves the most.",
+      "releaseDate": "2026-12-15",
+      "tmdbId": 1170608,
+      "originalLanguage": "en",
+      "pagePath": "movies/dune-part-three/"
     },
     {
       "id": "5DddMUVQ5xQ",
       "title": "Mr. Irrelevant | New Trailer (2026 Movie) - David Corenswet, Isabel May",
       "channelTitle": "Paramount Pictures",
       "publishedAt": "2026-11-23T17:00:14Z",
-      "views": 3207660,
-      "likes": 436,
+      "views": 3209497,
+      "likes": 440,
       "thumbnail": "https://i.ytimg.com/vi/5DddMUVQ5xQ/maxresdefault.jpg",
       "audioLanguage": "en-US",
       "language": "en",
       "descriptionSummary": "Mr. Irrelevant is the inspiring true story of John Tuggle (David Corenswet), the last player selected in the last round of the 1983 NFL draft by the New York Giants. A true underdog, Tuggle defied expectations on the field and off for his then first-year head coach, Bill Parcells (Michael Shannon), his newfound love (Isabel May), and his team, proving that remarkable hope and perseverance can transcend even…",
-      "movieTitle": "Mr. Irrelevant",
-      "summary": "The last player selected in the 1983 NFL draft by the New York Giants, underdog John Tuggle, defies expectations on and off the field for head coach Bill Parcells, his newfound love, and his team, proving that remarkable hope and perseverance can transcend even the greatest challenges.",
-      "releaseDate": "2026-12-25",
-      "tmdbId": 1372443,
       "movieSlug": "mr-irrelevant",
       "links": [
         {
@@ -122,23 +103,25 @@
           "label": "Get tickets",
           "url": "https://www.fandango.com/search?q=Mr.%20Irrelevant&mode=all"
         }
-      ]
+      ],
+      "movieTitle": "Mr. Irrelevant",
+      "summary": "The last player selected in the 1983 NFL draft by the New York Giants, underdog John Tuggle, defies expectations on and off the field for head coach Bill Parcells, his newfound love, and his team, proving that remarkable hope and perseverance can transcend even the greatest challenges.",
+      "releaseDate": "2026-12-25",
+      "tmdbId": 1372443,
+      "originalLanguage": "en",
+      "pagePath": "movies/mr-irrelevant/"
     },
     {
       "id": "Wb8Tq_HD4E8",
       "title": "Avengers: Doomsday | Final Trailer | In Theaters December 18",
       "channelTitle": "Marvel Entertainment",
       "publishedAt": "2026-11-23T14:00:01Z",
-      "views": 66517739,
-      "likes": 1698860,
+      "views": 67445944,
+      "likes": 1701896,
       "thumbnail": "https://i.ytimg.com/vi/Wb8Tq_HD4E8/maxresdefault.jpg",
       "audioLanguage": "en",
       "language": "en",
       "descriptionSummary": "",
-      "movieTitle": "Avengers: Doomsday",
-      "summary": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
-      "releaseDate": "2026-12-16",
-      "tmdbId": 1003596,
       "movieSlug": "avengers-doomsday",
       "links": [
         {
@@ -146,23 +129,25 @@
           "label": "Get tickets",
           "url": "https://www.fandango.com/search?q=Avengers%3A%20Doomsday&mode=all"
         }
-      ]
+      ],
+      "movieTitle": "Avengers: Doomsday",
+      "summary": "Beloved heroes from three distinct universes are set on a deadly collision course and face an existential threat unlike anything they've ever encountered.",
+      "releaseDate": "2026-12-16",
+      "tmdbId": 1003596,
+      "originalLanguage": "en",
+      "pagePath": "movies/avengers-doomsday/"
     },
     {
       "id": "xVjpzd-fsJU",
       "title": "The Trust | Official Trailer | Netflix",
       "channelTitle": "Netflix",
       "publishedAt": "2026-11-23T08:00:00Z",
-      "views": 835271,
-      "likes": 7949,
+      "views": 840288,
+      "likes": 7965,
       "thumbnail": "https://i.ytimg.com/vi/xVjpzd-fsJU/maxresdefault.jpg",
       "audioLanguage": "en-US",
       "language": "en",
       "descriptionSummary": "",
-      "movieTitle": "The Trust",
-      "summary": "Sir Idris Elba joins forces with His Majesty King Charles III to mark 50 years of The King’s Trust and explore how life has changed for young people. Growing up in Hackney, Idris received a Trust grant that helped launch his acting career. As he reflects on his own extraordinary journey, the documentary also follows three young people pursuing their ambitions with The Trust's support and the challenges they face today. Filmed over the course of a year, the documentary captures how The Trust has helped more than 1.5 million young people around the world develop the confidence and skills they need for work – and offers an intimate and insightful portrait of the friendship it forged between two men united by a shared vision.",
-      "releaseDate": "",
-      "tmdbId": 1843733,
       "movieSlug": "the-trust",
       "links": [
         {
@@ -170,7 +155,13 @@
           "label": "Watch on Netflix",
           "url": "https://www.netflix.com/search?q=The%20Trust"
         }
-      ]
+      ],
+      "movieTitle": "The Trust",
+      "summary": "Sir Idris Elba joins forces with His Majesty King Charles III to mark 50 years of The King’s Trust and explore how life has changed for young people. Growing up in Hackney, Idris received a Trust grant that helped launch his acting career. As he reflects on his own extraordinary journey, the documentary also follows three young people pursuing their ambitions with The Trust's support and the challenges they face today. Filmed over the course of a year, the documentary captures how The Trust has helped more than 1.5 million young people around the world develop the confidence and skills they need for work – and offers an intimate and insightful portrait of the friendship it forged between two men united by a shared vision.",
+      "releaseDate": "",
+      "tmdbId": 1843733,
+      "originalLanguage": "en",
+      "pagePath": "movies/the-trust/"
     }
   ]
 }
