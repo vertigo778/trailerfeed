@@ -123,7 +123,9 @@ Two things to check before making money from the site:
 
 ## Google Analytics
 
-Paste your GA4 measurement ID (`G-…`, from Google Analytics → Admin → Data streams → your web stream) into `GA_ID` in `analytics.js` and push. Every page loads that file, so this one edit turns analytics on everywhere. It stays off while `GA_ID` is empty, on localhost and on Cloudflare preview builds. The privacy policy already mentions Google Analytics. If you get visitors from the EU or UK, add a cookie consent banner before turning it on.
+`analytics.js` holds the Google Tag Manager container ID (`GTM-M7L9FHZ9`). Every page loads that file, so this one edit controls analytics everywhere. You can also put a GA4 measurement ID (`G-…`) there instead to load Google Analytics directly. Analytics stays off while the ID is empty, on localhost and on Cloudflare preview builds.
+
+With Tag Manager, set up GA4 inside the container: add a **Google tag** with your GA4 measurement ID, trigger it on **All Pages**, and **Publish**. The tabs change the URL with `history.replaceState`, which GA4's enhanced measurement counts as page views. If you get visitors from the EU or UK, add a cookie consent banner as well.
 
 ## Running locally
 
