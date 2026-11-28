@@ -1,6 +1,6 @@
 {
   "_readme": "Buttons shown under each trailer. {query} is replaced with the movie name (URL-encoded). To earn commission, swap a url for your affiliate link once you're approved, e.g. a Fandango link from the Fandango affiliate program, keeping {query} where the search term goes. Set \"enabled\": false to hide a button.",
-  "siteUrl": "https://trailerfeed.elandassani.workers.dev",
+  "siteUrl": "https://trailerfeed.io",
   "tickets": {
     "enabled": true,
     "label": "Get tickets",

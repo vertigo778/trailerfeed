@@ -69,7 +69,7 @@
     $("hero-summary").textContent = t.summary || "";
     $("hero-summary").hidden = !t.summary;
     renderActions($("hero-actions"), t, true);
-    document.title = `${t.title} · Trailer Feed`;
+    document.title = `${t.title} · Trailerfeed`;
     const q = tab === "movies" ? "" : `?tab=${tab}`;
     history.replaceState(null, "", location.pathname + q + (t === trailers[0] ? "" : `#v=${t.id}`));
     renderGrid();
