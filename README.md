@@ -121,6 +121,12 @@ Two things to check before making money from the site:
 - TMDB's free API is for non-commercial use. A site with affiliate links or ads needs TMDB's commercial terms, or you can drop `TMDB_API_KEY` and use YouTube descriptions only.
 - Keep ads and overlays off the YouTube player. YouTube's terms don't allow covering or wrapping the embed.
 
+## Google Analytics
+
+`analytics.js` loads Google Analytics 4 directly (`GA_ID`, `G-KT1GPWNCYR`) and the Google Tag Manager container (`GTM_ID`, `GTM-M7L9FHZ9`) on every page. Leave an ID empty to turn that part off. Neither runs on localhost or on Cloudflare preview builds.
+
+GA4 is already loaded by the site, so **don't add a GA4 / Google tag for the same ID inside Tag Manager**, or every page view counts twice. Use Tag Manager only for other tags. The tabs change the URL with `history.replaceState`, which GA4's enhanced measurement counts as page views. If you get visitors from the EU or UK, add a cookie consent banner as well.
+
 ## Running locally
 
 The page loads JSON with `fetch`, so serve the folder rather than opening the file directly:

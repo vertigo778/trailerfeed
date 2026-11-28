@@ -128,6 +128,7 @@ export function moviePage(m, { siteUrl, now = new Date(), section = SECTIONS[0] 
   <meta property="og:site_name" content="Trailerfeed">
   <link rel="stylesheet" href="../../style.css">
   <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>
+  <script src="../../analytics.js" defer></script>
 </head>
 <body>
   <header class="top">
