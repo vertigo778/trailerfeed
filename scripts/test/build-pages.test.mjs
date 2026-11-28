@@ -39,7 +39,7 @@ test("groupMovies joins trailers of one movie and builds a page with SEO tags", 
   assert.deepEqual(movies.map((m) => [m.slug, m.trailers.length]), [["avengers-doomsday", 2], ["paper-tiger", 1]]);
   const m = movies[0]; m.config = config;
   const html = moviePage(m, { siteUrl: "https://site.example", now });
-  assert.match(html, /<title>Avengers: Doomsday \(2026\) Trailer · Trailer Feed<\/title>/);
+  assert.match(html, /<title>Avengers: Doomsday \(2026\) Trailer · Trailerfeed<\/title>/);
   assert.match(html, /<link rel="canonical" href="https:\/\/site.example\/movies\/avengers-doomsday\/">/);
   assert.match(html, /og:image" content="https:\/\/i.ytimg.com\/a.jpg"/);
   assert.match(html, /Doom &lt;arrives&gt;\./);

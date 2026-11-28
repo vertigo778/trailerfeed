@@ -1,4 +1,4 @@
-# Trailer Feed
+# Trailerfeed
 
 A static website that shows the newest popular movie, TV and video game trailers from YouTube, in three tabs. The newest trailer is embedded at the top of the page; the rest are listed below, sortable by newest or most viewed.
 

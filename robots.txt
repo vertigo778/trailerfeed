@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://trailerfeed.elandassani.workers.dev/sitemap.xml
+Sitemap: https://trailerfeed.io/sitemap.xml

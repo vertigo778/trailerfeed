@@ -106,7 +106,7 @@ export function moviePage(m, { siteUrl, now = new Date(), section = SECTIONS[0] 
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>${esc(title)} · Trailer Feed</title>
+  <title>${esc(title)} · Trailerfeed</title>
   <meta name="description" content="${esc(desc)}">
   <link rel="canonical" href="${esc(url)}">
   <meta property="og:type" content="${section.key === "tv" ? "video.tv_show" : section.key === "games" ? "website" : "video.movie"}">
@@ -119,13 +119,20 @@ export function moviePage(m, { siteUrl, now = new Date(), section = SECTIONS[0] 
   <meta name="twitter:title" content="${esc(title)}">
   <meta name="twitter:description" content="${esc(desc)}">
   <meta name="twitter:image" content="${esc(t.thumbnail)}">
+  <link rel="icon" href="../../favicon.ico" sizes="any">
+  <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png">
+  <link rel="manifest" href="../../site.webmanifest">
+  <meta name="theme-color" content="#0e0f13">
+  <link rel="preload" href="../../fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <meta property="og:site_name" content="Trailerfeed">
   <link rel="stylesheet" href="../../style.css">
   <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>
   <script src="../../analytics.js" defer></script>
 </head>
 <body>
   <header class="top">
-    <a class="brand" href="../../">Trailer Feed</a>
+    <a class="brand" href="../../"><img src="../../brand/logo.svg" alt="Trailerfeed" width="213" height="25"></a>
     <a class="updated" href="../../?tab=${section.key}">All trailers</a>
   </header>
   <main>
@@ -149,6 +156,7 @@ export function moviePage(m, { siteUrl, now = new Date(), section = SECTIONS[0] 
     </section>` : ""}
   </main>
   <footer class="foot">
+    <div class="foot-brand"><img src="../../brand/mark.svg" alt="" width="26" height="24"><span><strong>Trailerfeed</strong> · New movie, TV and game trailers, every day · <a href="mailto:help@trailerfeed.io">help@trailerfeed.io</a></span></div>
     <nav class="foot-links" aria-label="Site"><a href="../../about/">About</a><a href="../../privacy/">Privacy policy</a><a href="../../disclosure/">Affiliate disclosure</a></nav>
     <p class="disclosure">We may earn a commission from ticket and streaming links. <a href="../../disclosure/">Learn more</a></p>
     <p>Trailers are embedded from YouTube. This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
