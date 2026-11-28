@@ -115,6 +115,8 @@ Buttons come from `config/links.json`:
 
 To earn commission, sign up for the affiliate programs (Fandango's runs through its affiliate network, and JustWatch and the streamers have their own). Then replace the `url` values with your affiliate links, keeping `{query}` where the movie name goes. All button links carry `rel="sponsored"`, as search engines require for paid links. Set `siteUrl` (or the `SITE_URL` repo variable) if you move to your own domain.
 
+The About (`about/`), Privacy policy (`privacy/`) and Affiliate disclosure (`disclosure/`) pages are plain HTML, linked from every footer, with a short commission notice under the buttons. Before applying to an affiliate program, check the contact address `help@trailerfeed.io` in those three pages works, and update their canonical links if the domain changes.
+
 Two things to check before making money from the site:
 - TMDB's free API is for non-commercial use. A site with affiliate links or ads needs TMDB's commercial terms, or you can drop `TMDB_API_KEY` and use YouTube descriptions only.
 - Keep ads and overlays off the YouTube player. YouTube's terms don't allow covering or wrapping the embed.

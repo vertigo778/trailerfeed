@@ -47,6 +47,10 @@ test("groupMovies joins trailers of one movie and builds a page with SEO tags", 
   assert.match(html, /youtube-nocookie.com\/embed\/a\?/);
   assert.match(html, /More Avengers: Doomsday trailers/);
   assert.match(html, /rel="sponsored noopener">Get tickets</);
+  assert.match(html, /class="disclosure">We may earn a commission/);
+  assert.match(html, /href="..\/..\/privacy\/">Privacy policy</);
+  assert.match(html, /not endorsed or certified by TMDB/);
   const xml = sitemap(movies, "https://site.example", "2026-11-27T00:00:00Z");
+  assert.match(xml, /<loc>https:\/\/site.example\/privacy\/<\/loc>/);
   assert.match(xml, /<loc>https:\/\/site.example\/movies\/paper-tiger\/<\/loc><lastmod>2026-11-27<\/lastmod>/);
 });
