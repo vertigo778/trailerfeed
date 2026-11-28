@@ -93,7 +93,13 @@ Each day the script searches YouTube for videos uploaded in the last 7 days matc
 
 When the same trailer is uploaded by several channels within a few days (the studio, IGN, KinoCheck and so on), only the most viewed upload is kept. A new trailer for the same movie later on (a second trailer, a final trailer) is added as its own entry, so the feed picks up every new Dune or Doomsday trailer.
 
-Trailers stay in the feed for 60 days, up to 120 at a time, newest first. Each run also re-checks trailers already in the feed, so view counts stay current and stricter rules clean out older entries.
+Trailers stay in the feed for 26 weeks (up to 1,000 per tab), so history builds up over time. The site groups them by the week they came out ("This week", "Last week", "Week of Nov 9"…), shows four weeks at first and loads four more with **Show older weeks**. Each run also re-checks trailers already in the feed, so view counts stay current and stricter rules clean out older entries.
+
+### Filling in past weeks (backfill)
+
+The daily run only searches the last 7 days. To fill in earlier weeks, open **Actions → Update trailers → Run workflow** and enter weeks in **backfill_weeks**, for example `1-6` (one to six weeks ago). Each past week is searched on its own, so every week gets its own most-viewed trailers.
+
+Each week costs about 1,100 of YouTube's 10,000 free daily quota units (11 searches across the three tabs), and the daily run uses about 1,100 more. So backfill at most about 7 weeks per day, for example `1-6` one day and `7-12` the next. If the quota runs out midway, the weeks already searched are kept, and the quota resets at midnight Pacific time.
 
 You can tune this without editing code by adding repository **variables** (**Settings → Secrets and variables → Actions → Variables**), which the workflow already passes through: `SEARCH_WINDOW_DAYS`, `KEEP_DAYS`, `MIN_VIEWS`, `MAX_ITEMS`, `REGION_CODE`, `QUERIES` (separated by `|`), `ENGLISH_ONLY` (set to `false` to include every language and any channel), and `CHANNELS` (your own channel list, names separated by `|`), and `SAME_TRAILER_DAYS` (how close together two uploads of one movie must be to count as the same trailer, default 3).
 

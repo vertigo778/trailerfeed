@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "17 9 * * *" # daily at 09:17 UTC
   workflow_dispatch: # lets you run it by hand from the Actions tab
+    inputs:
+      backfill_weeks:
+        description: 'Fill in past weeks instead of the usual daily search, e.g. "1-6" (weeks ago). Each week costs about 1,100 of the 10,000 daily YouTube quota units.'
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -42,6 +47,7 @@ jobs:
           GAMES_CHANNELS: ${{ vars.GAMES_CHANNELS }}
           GAMES_QUERIES: ${{ vars.GAMES_QUERIES }}
           GAMES_MIN_VIEWS: ${{ vars.GAMES_MIN_VIEWS }}
+          BACKFILL_WEEKS: ${{ inputs.backfill_weeks }}
         run: node scripts/fetch-trailers.mjs
 
       - name: Build movie pages and sitemap
