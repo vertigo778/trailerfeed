@@ -91,5 +91,5 @@ a.updated:hover { color: var(--text); }
 .foot-links a { color: var(--text); text-decoration: none; }
 .foot-links a:hover { text-decoration: underline; }
 .foot p { margin: 0; }
-.disclosure { color: var(--muted); font-size: 0.78rem; margin: 8px 0 0; }
+.foot .disclosure { margin: 0 0 4px; }
 .disclosure a { color: inherit; }

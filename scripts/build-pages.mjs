@@ -135,8 +135,7 @@ export function moviePage(m, { siteUrl, now = new Date(), section = SECTIONS[0] 
         <h1>${esc(m.name)}${year ? ` <span class="year">(${esc(year)})</span>` : ""}</h1>
         <p class="sub">${esc(t.channelTitle)}${releaseLine ? ` · <span class="release">${esc(releaseLine)}</span>` : ""}</p>
         ${m.summary ? `<p class="summary">${esc(m.summary)}</p>` : ""}
-        ${links.length ? `<div class="actions">${links.map((l) => `<a class="btn btn-${l.kind}" href="${esc(l.url)}" target="_blank" rel="sponsored noopener">${esc(l.label)}</a>`).join("")}</div>
-        <p class="disclosure">We may earn a commission from ticket and streaming links. <a href="../../disclosure/">Learn more</a></p>` : ""}
+        ${links.length ? `<div class="actions">${links.map((l) => `<a class="btn btn-${l.kind}" href="${esc(l.url)}" target="_blank" rel="sponsored noopener">${esc(l.label)}</a>`).join("")}</div>` : ""}
       </div>
     </section>
     ${others.length ? `<section class="feed">
@@ -150,6 +149,7 @@ export function moviePage(m, { siteUrl, now = new Date(), section = SECTIONS[0] 
   </main>
   <footer class="foot">
     <nav class="foot-links" aria-label="Site"><a href="../../about/">About</a><a href="../../privacy/">Privacy policy</a><a href="../../disclosure/">Affiliate disclosure</a></nav>
+    <p class="disclosure">We may earn a commission from ticket and streaming links. <a href="../../disclosure/">Learn more</a></p>
     <p>Trailers are embedded from YouTube. This product uses the TMDB API but is not endorsed or certified by TMDB.</p>
   </footer>
 </body>

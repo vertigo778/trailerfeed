@@ -69,7 +69,6 @@
     $("hero-summary").textContent = t.summary || "";
     $("hero-summary").hidden = !t.summary;
     renderActions($("hero-actions"), t, true);
-    $("hero-disclosure").hidden = !(t.links || []).length;
     document.title = `${t.title} · Trailer Feed`;
     const q = tab === "movies" ? "" : `?tab=${tab}`;
     history.replaceState(null, "", location.pathname + q + (t === trailers[0] ? "" : `#v=${t.id}`));
