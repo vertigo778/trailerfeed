@@ -74,8 +74,9 @@ const STREAMERS = new Set(["netflix", "prime video", "apple tv", "hbo max", "max
 const AGGREGATORS = ["ign", "gamespot", "rotten tomatoes tv", "rotten tomatoes trailers", "kinocheck.com"];
 
 // The three feeds. Movies use CONFIG as is; TV and games override what differs.
+// TV runs first so the movie feed can skip anything the TV feed claimed (a streamer title can
+// match both a film and a show on TMDB).
 export const CATEGORIES = {
-  movies: CONFIG,
   tv: {
     ...CONFIG,
     category: "tv",
@@ -91,6 +92,7 @@ export const CATEGORIES = {
     aggregators: AGGREGATORS,
     aggregatorMustMatch: new RegExp(TV_WORDS, "i"),
   },
+  movies: CONFIG,
   games: {
     ...CONFIG,
     category: "games",
@@ -141,7 +143,7 @@ const TRAILER_WORDS = /\b(official|final|new|exclusive|international|teaser|trai
 // "Avengers: Doomsday | Final Trailer | In Theaters December 18".
 export function movieName(title) {
   const t = title.replace(/\(.*?\)|\[.*?\]/g, " ");
-  const cut = t.search(/\b(official|final|new|exclusive|international|teaser|trailer)\b/i);
+  const cut = t.search(/\b(official|final|new|exclusive|international|teaser|trailer|launch|reveal|release date|announcement|announce|gameplay|demo)\b/i);
   let base = cut > 0 ? t.slice(0, cut) : "";
   if (!base.replace(/[^\p{L}\p{N}]/gu, "")) {
     base = t.split(/\s[|–—-]\s|\|/).map((x) => x.replace(TRAILER_WORDS, "")).find((x) => x.replace(/[^\p{L}\p{N}]/gu, "")) || t;
@@ -225,6 +227,11 @@ export function sameMovie(a, b) {
   return x.length >= 2 && x.every((w) => y.includes(w)) && y.every((w) => x.includes(w) || /^\d+$/.test(w));
 }
 
+function contains(a, b) {
+  const [x, y] = [a.split(" "), b.split(" ")].sort((p, q) => p.length - q.length);
+  return x.length >= 2 && x.every((w) => y.includes(w));
+}
+
 // Collapse re-uploads of one trailer (same movie, published within a few days of each other) to the
 // most viewed upload. A newer trailer for the same movie, weeks later, is a new version and stays.
 export function dedupe(list, config = CONFIG) {
@@ -232,7 +239,10 @@ export function dedupe(list, config = CONFIG) {
   const kept = [];
   for (const t of [...list].sort((a, b) => b.views - a.views)) {
     const k = movieKey(t.title);
-    const dup = kept.some((o) => sameMovie(o.key, k) && Math.abs(new Date(o.t.publishedAt) - new Date(t.publishedAt)) <= windowMs);
+    // Game trailers often add the update's name ("The Division 2: Spearfall"), so in the games feed
+    // one name containing the other counts as the same game.
+    const same = (a, b) => sameMovie(a, b) || (config.category === "games" && contains(a, b));
+    const dup = kept.some((o) => same(o.key, k) && Math.abs(new Date(o.t.publishedAt) - new Date(t.publishedAt)) <= windowMs);
     if (!dup) kept.push({ key: k, t });
   }
   const keep = new Set(kept.map((o) => o.t));
@@ -368,7 +378,7 @@ export function dropWrongFeed(trailers, config, tmdbKey) {
   return trailers;
 }
 
-async function updateCategory(config, apiKey, tmdbKey) {
+async function updateCategory(config, apiKey, tmdbKey, claimed = new Set()) {
   const file = path.join(ROOT, "data", config.file);
   let current = { trailers: [] };
   try { current = JSON.parse(await readFile(file, "utf8")); } catch {}
@@ -376,6 +386,8 @@ async function updateCategory(config, apiKey, tmdbKey) {
   const trailers = merge(current.trailers || [], fresh, { config });
   await addSummaries(trailers, { tmdbKey, type: config.tmdbType });
   dropWrongFeed(trailers, config, tmdbKey);
+  for (let i = trailers.length - 1; i >= 0; i--) if (claimed.has(trailers[i].id)) trailers.splice(i, 1);
+  for (const t of trailers) claimed.add(t.id);
   const out = { updatedAt: new Date().toISOString(), count: trailers.length, trailers };
   await writeFile(file, JSON.stringify(out, null, 2) + "\n");
   console.log(`${config.category}: found ${fresh.length} popular trailers this run; feed now has ${trailers.length}.`);
@@ -389,8 +401,9 @@ async function main() {
   }
   // One feed failing (quota, a bad response) shouldn't stop the others.
   let failed = 0;
+  const claimed = new Set(); // a video appears in one feed only
   for (const config of Object.values(CATEGORIES)) {
-    try { await updateCategory(config, apiKey, process.env.TMDB_API_KEY); }
+    try { await updateCategory(config, apiKey, process.env.TMDB_API_KEY, claimed); }
     catch (e) { failed++; console.error(`${config.category}: ${e.message}`); }
   }
   if (failed === Object.keys(CATEGORIES).length) process.exit(1);
