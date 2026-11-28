@@ -4,16 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Trailer Feed</title>
-  <meta name="description" content="The newest official movie trailers from Marvel, Warner Bros., Paramount, A24, Netflix and more, updated daily.">
+  <meta name="description" content="The newest official movie, TV and video game trailers, updated daily.">
   <meta property="og:type" content="website">
   <meta property="og:title" content="Trailer Feed">
-  <meta property="og:description" content="The newest official movie trailers, updated daily.">
+  <meta property="og:description" content="The newest official movie, TV and video game trailers, updated daily.">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="top">
     <a class="brand" href="./">Trailer Feed</a>
+    <nav class="tabs" aria-label="Trailer type">
+      <a href="./" data-tab="movies" aria-current="true">Movies</a>
+      <a href="./?tab=tv" data-tab="tv" aria-current="false">TV</a>
+      <a href="./?tab=games" data-tab="games" aria-current="false">Games</a>
+    </nav>
     <span class="updated" id="updated"></span>
   </header>
 

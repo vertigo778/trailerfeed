@@ -1,5 +1,6 @@
 #!/usr/bin/env node
-// Finds new, popular official movie trailers on YouTube and merges them into data/trailers.json.
+// Finds new, popular official trailers on YouTube for three feeds (movies, TV, video games) and
+// merges them into data/trailers.json, data/tv.json and data/games.json.
 // Runs daily from .github/workflows/update-trailers.yml. Needs YOUTUBE_API_KEY in the environment.
 // No dependencies: Node 20+ (built-in fetch).
 
@@ -8,10 +9,13 @@ import { fileURLToPath } from "node:url";
 import path from "node:path";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const DATA_FILE = path.join(ROOT, "data", "trailers.json");
 const API = "https://www.googleapis.com/youtube/v3";
 
 export const CONFIG = {
+  category: "movies",
+  file: "trailers.json",
+  // TMDB lookup type for summaries: "movie", "tv" or "" (none).
+  tmdbType: "movie",
   // How far back each daily search looks for new uploads.
   searchWindowDays: Number(process.env.SEARCH_WINDOW_DAYS || 7),
   // How long a trailer stays in the feed.
@@ -48,19 +52,74 @@ export const CONFIG = {
 };
 
 const MUST_MATCH = /\btrailer\b|\bteaser\b/i;
-// Fan edits, reactions, commentary, games, music and TV content that also say "trailer" or "teaser".
-const REJECT = new RegExp([
+// Fan edits, reactions, commentary and music uploads that also say "trailer" or "teaser".
+const COMMON_REJECT = new RegExp([
   String.raw`\b(reactions?|reacting|reacts?|fan[\s-]?made|fan[\s-]?edit|edit|concept|parody|spoof|breakdown|explained|explains?|review|recap|analysis|an[aá]lise|an[aá]lisis|details|hidden|leaked?|leaks|easter eggs?|theory|predictions?|aura|notion|ai[\s-]generated)\b`,
-  String.raw`\b(video game|gameplay|in[\s-]game|ps5|xbox|nintendo|fortnite|roblox|minecraft|poppy playtime|hoyo\w*|genshin|star rail|dls\d*)\b`,
-  String.raw`\b(season \d+|episode|series|k-?drama|mv|music video|lyric video|musical trailer|song|album|background music|bgm)\b`,
+  String.raw`\b(mv|music video|lyric video|musical trailer|song|album|background music|bgm)\b`,
   String.raw`#shorts`,
 ].join("|"), "i");
+const GAME_WORDS = String.raw`\b(video game|gameplay|in[\s-]game|ps5|ps4|playstation|xbox|nintendo|switch 2|steam|dlc|fortnite|roblox|minecraft|poppy playtime|hoyo\w*|genshin|star rail|dls\d*)\b`;
+const TV_WORDS = String.raw`\b(season \d+|episode|series|docuseries|k-?drama)\b`;
+// Category-specific: the movie feed drops game and TV trailers, the TV feed drops game trailers.
+const REJECT = {
+  movies: new RegExp(`${GAME_WORDS}|${TV_WORDS}`, "i"),
+  tv: new RegExp(GAME_WORDS, "i"),
+  games: null,
+};
 // Clickbait-style titles (emoji, ending in "!") are almost never official uploads.
 const EMOJI = /\p{Extended_Pictographic}|!\s*$/u;
 
-export function isTrailer(snippet) {
+const list = (env, fallback) => (env || fallback.join("|")).split("|").map((c) => c.trim().toLowerCase()).filter(Boolean);
+const STREAMERS = new Set(["netflix", "prime video", "apple tv", "hbo max", "max", "hulu", "peacock", "paramount plus", "paramount+", "disney plus", "disney+"]);
+const AGGREGATORS = ["ign", "gamespot", "rotten tomatoes tv", "rotten tomatoes trailers", "kinocheck.com"];
+
+// The three feeds. Movies use CONFIG as is; TV and games override what differs.
+export const CATEGORIES = {
+  movies: CONFIG,
+  tv: {
+    ...CONFIG,
+    category: "tv",
+    file: "tv.json",
+    tmdbType: "tv",
+    minViews: Number(process.env.TV_MIN_VIEWS || 50000),
+    queries: list(process.env.TV_QUERIES, ["official series trailer", "season official trailer", "limited series official trailer"]),
+    channels: list(process.env.TV_CHANNELS, [
+      "Netflix", "Prime Video", "Apple TV", "HBO Max", "Max", "Hulu", "Peacock", "Paramount Plus", "Paramount+",
+      "Disney Plus", "Disney+", "FX Networks", "AMC", "AMC+", "STARZ", "Showtime", "Marvel Entertainment", "Star Wars",
+      "Rotten Tomatoes TV", "IGN",
+    ]),
+    aggregators: AGGREGATORS,
+    aggregatorMustMatch: new RegExp(TV_WORDS, "i"),
+  },
+  games: {
+    ...CONFIG,
+    category: "games",
+    file: "games.json",
+    tmdbType: "",
+    minViews: Number(process.env.GAMES_MIN_VIEWS || 50000),
+    queries: list(process.env.GAMES_QUERIES, ["official game trailer", "gameplay trailer", "launch trailer game", "reveal trailer game"]),
+    channels: list(process.env.GAMES_CHANNELS, [
+      "PlayStation", "Xbox", "Nintendo of America", "Ubisoft", "Ubisoft North America", "EA", "Electronic Arts",
+      "Bethesda Softworks", "Rockstar Games", "Bandai Namco America", "CAPCOM USA", "Capcom", "SEGA", "Square Enix",
+      "Square Enix North America", "Warner Bros. Games", "Riot Games", "Blizzard Entertainment", "Call of Duty",
+      "Activision", "Epic Games", "Fortnite", "2K", "Devolver Digital", "Valve", "Insomniac Games", "Naughty Dog",
+      "Bungie", "Destiny 2", "Battlefield", "Genshin Impact", "Honkai: Star Rail", "The Game Awards", "IGN", "GameSpot",
+    ]),
+    aggregators: AGGREGATORS,
+    aggregatorMustMatch: new RegExp(`${GAME_WORDS}|\\b(launch|reveal|announcement|announce|release date) trailer\\b`, "i"),
+  },
+};
+
+export function isTrailer(snippet, config = CONFIG) {
   const text = `${snippet.title} ${snippet.channelTitle}`;
-  return MUST_MATCH.test(snippet.title) && !REJECT.test(text) && !EMOJI.test(snippet.title);
+  const extra = REJECT[config.category || "movies"];
+  if (!MUST_MATCH.test(snippet.title) || COMMON_REJECT.test(text) || (extra && extra.test(text)) || EMOJI.test(snippet.title)) return false;
+  // Trailer channels like IGN post every kind of trailer, so in the TV and game feeds their
+  // uploads must say what they are.
+  if (config.aggregators?.includes((snippet.channelTitle || "").toLowerCase()) && config.aggregatorMustMatch) {
+    return config.aggregatorMustMatch.test(snippet.title);
+  }
+  return true;
 }
 
 // English if YouTube says so; if the uploader set no language, require a mostly Latin-script, non-dubbed title.
@@ -87,7 +146,7 @@ export function movieName(title) {
   if (!base.replace(/[^\p{L}\p{N}]/gu, "")) {
     base = t.split(/\s[|–—-]\s|\|/).map((x) => x.replace(TRAILER_WORDS, "")).find((x) => x.replace(/[^\p{L}\p{N}]/gu, "")) || t;
   }
-  return base.replace(/\b(movie|film)\b/gi, " ").replace(/[\s|–—:-]+$/u, "").replace(/^[\s|–—:-]+/u, "").replace(/\s+/g, " ").trim();
+  return base.replace(/\b(movie|film|season \d+|(limited |docu)?series|volume \d+|vol\. ?\d+)\b/gi, " ").replace(/[\s|–—:-]+$/u, "").replace(/^[\s|–—:-]+/u, "").replace(/\s+/g, " ").trim();
 }
 
 export function movieKey(title) {
@@ -105,8 +164,9 @@ export function summaryFromDescription(desc = "") {
 }
 
 // Look up the movie on TMDB (free API key, optional) for its official overview and release date.
-export async function lookupMovie(name, { tmdbKey, fetchFn = fetch, now = new Date() }) {
+export async function lookupMovie(name, { tmdbKey, fetchFn = fetch, now = new Date(), type = "movie" }) {
   if (!tmdbKey || !name) return null;
+  if (type === "tv") return lookupShow(name, { tmdbKey, fetchFn, now });
   const url = new URL("https://api.themoviedb.org/3/search/movie");
   url.searchParams.set("query", name);
   url.searchParams.set("language", "en-US");
@@ -122,7 +182,7 @@ export async function lookupMovie(name, { tmdbKey, fetchFn = fetch, now = new Da
   // Only trust an exact title match: a fuzzy "most popular" pick was often the wrong film.
   // Exact title match, ignoring numbering ("Avengers 5: Doomsday" is "Avengers: Doomsday").
   const pick = recent(results, "release_date").find((m) => m.overview && sameMovie(norm(m.title), norm(name)));
-  if (pick) return { movieTitle: pick.title, summary: pick.overview, releaseDate: pick.release_date || "", tmdbId: pick.id };
+  if (pick) return { movieTitle: pick.title, summary: pick.overview, releaseDate: pick.release_date || "", tmdbId: pick.id, originalLanguage: pick.original_language || "" };
   // No movie by that name: if it's a TV show, say so, so the feed can leave it out.
   const tvUrl = new URL(url);
   tvUrl.pathname = "/3/search/tv";
@@ -131,6 +191,29 @@ export async function lookupMovie(name, { tmdbKey, fetchFn = fetch, now = new Da
     const { results: shows = [] } = await tvRes.json();
     if (recent(shows, "first_air_date").some((m) => norm(m.name || "") === norm(name))) return { isTv: true };
   }
+  return null;
+}
+
+// The TV version: the show's overview and first air date, or { isMovie } when it's a film instead.
+async function lookupShow(name, { tmdbKey, fetchFn, now }) {
+  const bearer = tmdbKey.length > 40;
+  const get = async (kind) => {
+    const url = new URL(`https://api.themoviedb.org/3/search/${kind}`);
+    url.searchParams.set("query", name);
+    url.searchParams.set("language", "en-US");
+    if (!bearer) url.searchParams.set("api_key", tmdbKey);
+    const res = await fetchFn(url, bearer ? { headers: { Authorization: `Bearer ${tmdbKey}` } } : undefined);
+    if (!res.ok) throw new Error(`TMDB search failed (${res.status})`);
+    return (await res.json()).results || [];
+  };
+  const norm = (x) => x.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+  const minYear = now.getUTCFullYear() - 1;
+  const shows = await get("tv");
+  // Long-running shows started years ago, so no date filter here: an exact name match is enough.
+  const pick = shows.find((m) => m.overview && sameMovie(norm(m.name || ""), norm(name)));
+  if (pick) return { movieTitle: pick.name, summary: pick.overview, releaseDate: pick.first_air_date || "", tmdbId: pick.id, originalLanguage: pick.original_language || "" };
+  const movies = await get("movie");
+  if (movies.some((m) => norm(m.title || "") === norm(name) && (!m.release_date || Number(m.release_date.slice(0, 4)) >= minYear))) return { isMovie: true };
   return null;
 }
 
@@ -184,7 +267,7 @@ export async function findTrailers({ apiKey, fetchFn = fetch, now = new Date(), 
       relevanceLanguage: "en", videoEmbeddable: "true", safeSearch: "moderate",
     });
     for (const item of res.items || []) {
-      if (item.id?.videoId && isTrailer(item.snippet)) ids.add(item.id.videoId);
+      if (item.id?.videoId && isTrailer(item.snippet, config)) ids.add(item.id.videoId);
     }
   }
   // Also re-check trailers already in the feed, to refresh view counts and language.
@@ -200,7 +283,7 @@ export async function findTrailers({ apiKey, fetchFn = fetch, now = new Date(), 
     });
     for (const v of res.items || []) found.push(toTrailer(v));
   }
-  return found.filter((t) => t.embeddable && t.views >= config.minViews && isTrailer(t) && (!config.englishOnly || isEnglish(t, config)));
+  return found.filter((t) => t.embeddable && t.views >= config.minViews && isTrailer(t, config) && (!config.englishOnly || isEnglish(t, config)));
 }
 
 function toTrailer(v) {
@@ -231,7 +314,7 @@ export function merge(existing, fresh, { now = new Date(), config = CONFIG } = {
   const cutoff = now - config.keepDays * 864e5;
   // Re-check older entries too, so tightening the rules also cleans the existing feed.
   const kept = [...byId.values()].filter((t) =>
-    new Date(t.publishedAt) >= cutoff && isTrailer(t) && (!config.englishOnly || isEnglish(t, config)));
+    new Date(t.publishedAt) >= cutoff && isTrailer(t, config) && (!config.englishOnly || isEnglish(t, config)));
   return dedupe(kept, config)
     .sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt))
     .slice(0, config.maxItems);
@@ -239,26 +322,30 @@ export function merge(existing, fresh, { now = new Date(), config = CONFIG } = {
 
 // Fill in each trailer's movie summary: TMDB's overview when a TMDB key is set (looked up once per
 // movie and kept), otherwise the first prose paragraph of the YouTube description.
-export async function addSummaries(trailers, { tmdbKey, fetchFn = fetch, now = new Date() } = {}) {
+export async function addSummaries(trailers, { tmdbKey, fetchFn = fetch, now = new Date(), type = "movie" } = {}) {
+  if (!type) tmdbKey = ""; // games: description summaries only
   const cache = new Map();
   const norm = (x) => x.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
   for (const t of trailers) {
     // Forget earlier lookups that didn't match the movie's name exactly, so they're redone.
     if (t.tmdbId && !sameMovie(norm(t.movieTitle || ""), norm(movieName(t.title)))) {
-      for (const k of ["movieTitle", "summary", "releaseDate", "tmdbId"]) delete t[k];
+      for (const k of ["movieTitle", "summary", "releaseDate", "tmdbId", "originalLanguage"]) delete t[k];
     }
+    // Entries looked up before original language was recorded: look them up again once.
+    if (t.tmdbId && t.originalLanguage === undefined) for (const k of ["movieTitle", "summary", "releaseDate", "tmdbId"]) delete t[k];
     if (t.tmdbId) cache.set(movieKey(t.title), t);
   }
   for (const t of trailers) {
     if (!t.tmdbId && tmdbKey) {
       const key = movieKey(t.title);
       if (!cache.has(key)) {
-        try { cache.set(key, await lookupMovie(movieName(t.title), { tmdbKey, fetchFn, now })); }
+        try { cache.set(key, await lookupMovie(movieName(t.title), { tmdbKey, fetchFn, now, type })); }
         catch (e) { console.warn(e.message); cache.set(key, null); }
       }
       const m = cache.get(key);
       if (m?.isTv) t.isTv = true;
-      else if (m) Object.assign(t, { movieTitle: m.movieTitle, summary: m.summary, releaseDate: m.releaseDate, tmdbId: m.tmdbId });
+      else if (m?.isMovie) t.isMovie = true;
+      else if (m) Object.assign(t, { movieTitle: m.movieTitle, summary: m.summary, releaseDate: m.releaseDate, tmdbId: m.tmdbId, originalLanguage: m.originalLanguage });
     }
     if (!t.tmdbId) {
       if (t.descriptionSummary) t.summary = t.descriptionSummary;
@@ -268,22 +355,45 @@ export async function addSummaries(trailers, { tmdbKey, fetchFn = fetch, now = n
   return trailers;
 }
 
+// Streamers post both films and shows: drop what TMDB says belongs in the other feed. In
+// English-only mode also drop titles whose original language isn't English (streamers post
+// international titles with English names), and streamer uploads TMDB can't identify, since
+// that's where those international titles came from.
+export function dropWrongFeed(trailers, config, tmdbKey) {
+  const wrongFeed = (t) => (config.category === "movies" && t.isTv) || (config.category === "tv" && t.isMovie);
+  const foreign = (t) => config.englishOnly && config.tmdbType && tmdbKey && (
+    (t.tmdbId && t.originalLanguage && t.originalLanguage !== "en") ||
+    (!t.tmdbId && STREAMERS.has((t.channelTitle || "").toLowerCase())));
+  for (let i = trailers.length - 1; i >= 0; i--) if (wrongFeed(trailers[i]) || foreign(trailers[i])) trailers.splice(i, 1);
+  return trailers;
+}
+
+async function updateCategory(config, apiKey, tmdbKey) {
+  const file = path.join(ROOT, "data", config.file);
+  let current = { trailers: [] };
+  try { current = JSON.parse(await readFile(file, "utf8")); } catch {}
+  const fresh = await findTrailers({ apiKey, config, refreshIds: (current.trailers || []).map((t) => t.id) });
+  const trailers = merge(current.trailers || [], fresh, { config });
+  await addSummaries(trailers, { tmdbKey, type: config.tmdbType });
+  dropWrongFeed(trailers, config, tmdbKey);
+  const out = { updatedAt: new Date().toISOString(), count: trailers.length, trailers };
+  await writeFile(file, JSON.stringify(out, null, 2) + "\n");
+  console.log(`${config.category}: found ${fresh.length} popular trailers this run; feed now has ${trailers.length}.`);
+}
+
 async function main() {
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) {
     console.error("YOUTUBE_API_KEY is not set. See README.md, section 'YouTube API key'.");
     process.exit(1);
   }
-  let current = { trailers: [] };
-  try { current = JSON.parse(await readFile(DATA_FILE, "utf8")); } catch {}
-  const fresh = await findTrailers({ apiKey, refreshIds: (current.trailers || []).map((t) => t.id) });
-  const trailers = merge(current.trailers || [], fresh);
-  await addSummaries(trailers, { tmdbKey: process.env.TMDB_API_KEY });
-  // Movies only: drop trailers TMDB identifies as TV shows (streamers post both).
-  for (let i = trailers.length - 1; i >= 0; i--) if (trailers[i].isTv) trailers.splice(i, 1);
-  const out = { updatedAt: new Date().toISOString(), count: trailers.length, trailers };
-  await writeFile(DATA_FILE, JSON.stringify(out, null, 2) + "\n");
-  console.log(`Found ${fresh.length} popular trailers this run; feed now has ${trailers.length}.`);
+  // One feed failing (quota, a bad response) shouldn't stop the others.
+  let failed = 0;
+  for (const config of Object.values(CATEGORIES)) {
+    try { await updateCategory(config, apiKey, process.env.TMDB_API_KEY); }
+    catch (e) { failed++; console.error(`${config.category}: ${e.message}`); }
+  }
+  if (failed === Object.keys(CATEGORIES).length) process.exit(1);
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {

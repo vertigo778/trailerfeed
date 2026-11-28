@@ -36,6 +36,12 @@ jobs:
           ENGLISH_ONLY: ${{ vars.ENGLISH_ONLY }}
           CHANNELS: ${{ vars.CHANNELS }}
           SAME_TRAILER_DAYS: ${{ vars.SAME_TRAILER_DAYS }}
+          TV_CHANNELS: ${{ vars.TV_CHANNELS }}
+          TV_QUERIES: ${{ vars.TV_QUERIES }}
+          TV_MIN_VIEWS: ${{ vars.TV_MIN_VIEWS }}
+          GAMES_CHANNELS: ${{ vars.GAMES_CHANNELS }}
+          GAMES_QUERIES: ${{ vars.GAMES_QUERIES }}
+          GAMES_MIN_VIEWS: ${{ vars.GAMES_MIN_VIEWS }}
         run: node scripts/fetch-trailers.mjs
 
       - name: Build movie pages and sitemap
@@ -45,7 +51,7 @@ jobs:
 
       - name: Commit data if it changed
         run: |
-          git add -A data movies sitemap.xml robots.txt
+          git add -A data movies tv games sitemap.xml robots.txt
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0

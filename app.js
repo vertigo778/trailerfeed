@@ -2,7 +2,12 @@
   const $ = (id) => document.getElementById(id);
   const params = new URLSearchParams(location.search);
   // ?data=path lets you preview with another JSON file locally, e.g. ?data=scripts/test/sample-trailers.json
-  const dataUrl = params.get("data") || "data/trailers.json";
+  const TABS = {
+    movies: { file: "data/trailers.json", page: "Movie page", empty: "No movie trailers yet. Check back soon." },
+    tv: { file: "data/tv.json", page: "Show page", empty: "No TV trailers yet. The daily update will add them." },
+    games: { file: "data/games.json", page: "Game page", empty: "No game trailers yet. The daily update will add them." },
+  };
+  let tab = TABS[params.get("tab")] ? params.get("tab") : "movies";
 
   let trailers = [];
   let sort = "newest";
@@ -17,11 +22,11 @@
     return "just now";
   }
   function releaseText(d) {
-    if (!d) return "";
+    if (!d || tab === "tv") return ""; // a show's first air date says nothing about the new season
     const date = new Date(d + "T12:00:00Z");
     if (isNaN(date)) return "";
     const fmt = date.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
-    return (date > Date.now() ? "In theaters " : "Released ") + fmt;
+    return (date > Date.now() ? (tab === "games" ? "Out " : "In theaters ") : "Released ") + fmt;
   }
   // Ticket / watch buttons (from config/links.json via the daily build) and the movie page link.
   function renderActions(el, t, withPage) {
@@ -34,7 +39,7 @@
     }
     if (withPage && t.movieSlug) {
       const a = document.createElement("a");
-      a.className = "btn btn-page"; a.href = `movies/${encodeURIComponent(t.movieSlug)}/`; a.textContent = "Movie page";
+      a.className = "btn btn-page"; a.href = t.pagePath || `movies/${encodeURIComponent(t.movieSlug)}/`; a.textContent = TABS[tab].page;
       el.appendChild(a);
     }
     el.hidden = !el.children.length;
@@ -65,7 +70,8 @@
     $("hero-summary").hidden = !t.summary;
     renderActions($("hero-actions"), t, true);
     document.title = `${t.title} · Trailer Feed`;
-    history.replaceState(null, "", t === trailers[0] ? location.pathname + location.search : `#v=${t.id}`);
+    const q = tab === "movies" ? "" : `?tab=${tab}`;
+    history.replaceState(null, "", location.pathname + q + (t === trailers[0] ? "" : `#v=${t.id}`));
     renderGrid();
     if (scroll) $("hero").scrollIntoView({ behavior: "smooth", block: "start" });
   }
@@ -114,14 +120,30 @@
     $("hero-label").textContent = "";
   }
 
-  fetch(dataUrl, { cache: "no-cache" })
-    .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
-    .then((data) => {
-      trailers = (data.trailers || []).slice().sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
-      if (data.updatedAt) $("updated").textContent = "Updated " + ago(data.updatedAt);
-      if (!trailers.length) return showEmpty("No trailers yet. The daily update hasn't run, so check back soon.");
-      const fromHash = new URLSearchParams(location.hash.slice(1)).get("v");
-      play(trailers.find((t) => t.id === fromHash) || trailers[0]);
-    })
-    .catch(() => showEmpty("Couldn't load the trailer list. If you opened this file directly, serve the folder instead (see README)."));
+  function load(name, { fromHash = false } = {}) {
+    tab = name;
+    document.querySelectorAll(".tabs a").forEach((a) => a.setAttribute("aria-current", String(a.dataset.tab === tab)));
+    $("player").innerHTML = `<div class="player-empty">Loading…</div>`;
+    $("hero-title").textContent = ""; $("hero-sub").textContent = ""; $("hero-summary").hidden = true; $("hero-actions").hidden = true;
+    $("grid").innerHTML = ""; trailers = [];
+    // ?data=path lets you preview another JSON file locally, e.g. ?data=scripts/test/sample-trailers.json
+    const url = params.get("data") || TABS[tab].file;
+    fetch(url, { cache: "no-cache" })
+      .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then((data) => {
+        if (tab !== name) return; // switched tabs while loading
+        trailers = (data.trailers || []).slice().sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+        $("updated").textContent = data.updatedAt ? "Updated " + ago(data.updatedAt) : "";
+        if (!trailers.length) return showEmpty(TABS[tab].empty);
+        const id = fromHash ? new URLSearchParams(location.hash.slice(1)).get("v") : null;
+        play(trailers.find((t) => t.id === id) || trailers[0]);
+      })
+      .catch(() => { if (tab === name) showEmpty(location.protocol === "file:" ? "Serve this folder instead of opening the file directly (see README)." : TABS[tab].empty); });
+  }
+
+  document.querySelectorAll(".tabs a").forEach((a) => a.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (a.dataset.tab !== tab) load(a.dataset.tab);
+  }));
+  load(tab, { fromHash: true });
 })();

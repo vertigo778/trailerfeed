@@ -1,6 +1,6 @@
 #!/usr/bin/env node
-// Builds the SEO side of the site from data/trailers.json:
-//   - movies/<slug>/index.html, one page per movie (trailer, summary, release date, buttons)
+// Builds the SEO side of the site from the three feeds (data/trailers.json, tv.json, games.json):
+//   - movies/<slug>/, tv/<slug>/ and games/<slug>/ pages (trailer, summary, release date, buttons)
 //   - sitemap.xml and robots.txt
 //   - adds movieSlug and links (ticket / watch buttons) to each trailer in data/trailers.json
 // Button URLs come from config/links.json, so affiliate links can be swapped in without code changes.
@@ -21,13 +21,14 @@ const esc = (s = "") => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").r
 const fill = (tpl, q) => tpl.replace(/\{query\}/g, encodeURIComponent(q));
 
 // The buttons for one movie, from config/links.json.
-export function linksFor(t, config, now = new Date()) {
+export function linksFor(t, config, now = new Date(), section = "movies") {
   const name = t.movieTitle || movieName(t.title);
   const links = [];
+  if (section === "games") return links; // no game store links yet
   const stream = config.streaming?.[t.channelTitle];
   if (stream) links.push({ kind: "watch", label: stream.label, url: fill(stream.url, name) });
   const tk = config.tickets;
-  if (!stream && tk?.enabled && t.releaseDate) {
+  if (!stream && section === "movies" && tk?.enabled && t.releaseDate) {
     const days = (new Date(t.releaseDate + "T00:00:00Z") - now) / 864e5;
     if (days <= (tk.showFromDaysBeforeRelease ?? 60) && days >= -(tk.showUntilDaysAfterRelease ?? 75)) {
       links.push({ kind: "tickets", label: tk.label, url: fill(tk.url, name) });
@@ -39,6 +40,12 @@ export function linksFor(t, config, now = new Date()) {
   }
   return links;
 }
+
+export const SECTIONS = [
+  { key: "movies", file: "trailers.json", dir: "movies", schema: "Movie", eyebrow: "Official trailer" },
+  { key: "tv", file: "tv.json", dir: "tv", schema: "TVSeries", eyebrow: "Official TV trailer" },
+  { key: "games", file: "games.json", dir: "games", schema: "VideoGame", eyebrow: "Official game trailer" },
+];
 
 const AGGREGATORS = new Set(["IGN", "Rotten Tomatoes Trailers", "KinoCheck.com", "FilmSelect Trailer", "Fandango", "Movieclips Trailers"]);
 
@@ -74,17 +81,20 @@ export function groupMovies(trailers) {
 
 const fmtDate = (d) => new Date(d + "T12:00:00Z").toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
 
-export function moviePage(m, { siteUrl, now = new Date() }) {
-  const url = `${siteUrl}/movies/${m.slug}/`;
+export function moviePage(m, { siteUrl, now = new Date(), section = SECTIONS[0] }) {
+  const url = `${siteUrl}/${section.dir}/${m.slug}/`;
   const t = m.main;
-  const year = m.releaseDate ? m.releaseDate.slice(0, 4) : "";
+  const year = m.releaseDate && section.key !== "tv" ? m.releaseDate.slice(0, 4) : "";
   const title = `${m.name}${year ? ` (${year})` : ""} Trailer`;
   const desc = (m.summary || `Watch the latest official trailer for ${m.name}.`).slice(0, 300);
   const released = m.releaseDate && new Date(m.releaseDate) <= now;
-  const releaseLine = m.releaseDate ? `${released ? "Released" : "In theaters"} ${fmtDate(m.releaseDate)}` : "";
-  const links = linksFor({ ...t, movieTitle: m.name, releaseDate: m.releaseDate }, m.config, now);
+  const upcoming = { movies: "In theaters", tv: "Premieres", games: "Out" }[section.key];
+  const past = { movies: "Released", tv: "Premiered", games: "Released" }[section.key];
+  // A show's first air date says nothing about the season being promoted, so TV pages skip it.
+  const releaseLine = m.releaseDate && section.key !== "tv" ? `${released ? past : upcoming} ${fmtDate(m.releaseDate)}` : "";
+  const links = linksFor({ ...t, movieTitle: m.name, releaseDate: m.releaseDate }, m.config, now, section.key);
   const ld = [
-    { "@context": "https://schema.org", "@type": "Movie", name: m.name, description: m.summary || undefined,
+    { "@context": "https://schema.org", "@type": section.schema, name: m.name, description: m.summary || undefined,
       datePublished: m.releaseDate || undefined, image: t.thumbnail, url,
       trailer: { "@type": "VideoObject", name: t.title, description: desc, thumbnailUrl: t.thumbnail,
         uploadDate: t.publishedAt, embedUrl: `https://www.youtube.com/embed/${t.id}`,
@@ -99,7 +109,7 @@ export function moviePage(m, { siteUrl, now = new Date() }) {
   <title>${esc(title)} · Trailer Feed</title>
   <meta name="description" content="${esc(desc)}">
   <link rel="canonical" href="${esc(url)}">
-  <meta property="og:type" content="video.movie">
+  <meta property="og:type" content="${section.key === "tv" ? "video.tv_show" : section.key === "games" ? "website" : "video.movie"}">
   <meta property="og:title" content="${esc(title)}">
   <meta property="og:description" content="${esc(desc)}">
   <meta property="og:url" content="${esc(url)}">
@@ -115,13 +125,13 @@ export function moviePage(m, { siteUrl, now = new Date() }) {
 <body>
   <header class="top">
     <a class="brand" href="../../">Trailer Feed</a>
-    <a class="updated" href="../../">All trailers</a>
+    <a class="updated" href="../../?tab=${section.key}">All trailers</a>
   </header>
   <main>
     <section class="hero">
       <div class="player"><iframe src="https://www.youtube-nocookie.com/embed/${esc(t.id)}?rel=0&amp;playsinline=1" title="${esc(t.title)}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe></div>
       <div class="hero-meta">
-        <p class="eyebrow">Official trailer</p>
+        <p class="eyebrow">${esc(section.eyebrow)}</p>
         <h1>${esc(m.name)}${year ? ` <span class="year">(${esc(year)})</span>` : ""}</h1>
         <p class="sub">${esc(t.channelTitle)}${releaseLine ? ` · <span class="release">${esc(releaseLine)}</span>` : ""}</p>
         ${m.summary ? `<p class="summary">${esc(m.summary)}</p>` : ""}
@@ -137,15 +147,16 @@ export function moviePage(m, { siteUrl, now = new Date() }) {
       </ol>
     </section>` : ""}
   </main>
-  <footer class="foot">Trailers are embedded from YouTube. Movie details from TMDB. Some links may earn us a commission.</footer>
+  <footer class="foot">Trailers are embedded from YouTube.${section.key === "games" ? "" : " Details from TMDB."} Some links may earn us a commission.</footer>
 </body>
 </html>
 `;
 }
 
-export function sitemap(movies, siteUrl, updatedAt) {
+// pages: [{ dir, slug }]
+export function sitemap(pages, siteUrl, updatedAt) {
   const day = (updatedAt || new Date().toISOString()).slice(0, 10);
-  const urls = [`${siteUrl}/`, ...movies.map((m) => `${siteUrl}/movies/${m.slug}/`)];
+  const urls = [`${siteUrl}/`, ...pages.map((p) => `${siteUrl}/${p.dir || "movies"}/${p.slug}/`)];
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls.map((u) => `  <url><loc>${esc(u)}</loc><lastmod>${day}</lastmod></url>`).join("\n")}
@@ -156,24 +167,32 @@ ${urls.map((u) => `  <url><loc>${esc(u)}</loc><lastmod>${day}</lastmod></url>`).
 async function main() {
   const config = JSON.parse(await readFile(path.join(ROOT, "config", "links.json"), "utf8"));
   const siteUrl = (process.env.SITE_URL || config.siteUrl).replace(/\/+$/, "");
-  const dataFile = path.join(ROOT, "data", "trailers.json");
-  const data = JSON.parse(await readFile(dataFile, "utf8"));
-  const movies = groupMovies(data.trailers || []);
-  await rm(path.join(ROOT, "movies"), { recursive: true, force: true });
-  for (const m of movies) {
-    m.config = config;
-    const dir = path.join(ROOT, "movies", m.slug);
-    await mkdir(dir, { recursive: true });
-    await writeFile(path.join(dir, "index.html"), moviePage(m, { siteUrl }));
-    for (const t of m.trailers) {
-      t.movieSlug = m.slug;
-      t.links = linksFor({ ...t, movieTitle: m.name, releaseDate: m.releaseDate }, config);
+  const pages = [];
+  let updatedAt = "";
+  for (const section of SECTIONS) {
+    const dataFile = path.join(ROOT, "data", section.file);
+    let data;
+    try { data = JSON.parse(await readFile(dataFile, "utf8")); } catch { continue; }
+    if (data.updatedAt > updatedAt) updatedAt = data.updatedAt;
+    const movies = groupMovies(data.trailers || []);
+    await rm(path.join(ROOT, section.dir), { recursive: true, force: true });
+    for (const m of movies) {
+      m.config = config;
+      const dir = path.join(ROOT, section.dir, m.slug);
+      await mkdir(dir, { recursive: true });
+      await writeFile(path.join(dir, "index.html"), moviePage(m, { siteUrl, section }));
+      for (const t of m.trailers) {
+        t.movieSlug = m.slug;
+        t.pagePath = `${section.dir}/${m.slug}/`;
+        t.links = linksFor({ ...t, movieTitle: m.name, releaseDate: m.releaseDate }, config, new Date(), section.key);
+      }
+      pages.push({ dir: section.dir, slug: m.slug });
     }
+    await writeFile(dataFile, JSON.stringify(data, null, 2) + "\n");
+    console.log(`${section.key}: built ${movies.length} pages.`);
   }
-  await writeFile(dataFile, JSON.stringify(data, null, 2) + "\n");
-  await writeFile(path.join(ROOT, "sitemap.xml"), sitemap(movies, siteUrl, data.updatedAt));
+  await writeFile(path.join(ROOT, "sitemap.xml"), sitemap(pages, siteUrl, updatedAt));
   await writeFile(path.join(ROOT, "robots.txt"), `User-agent: *\nAllow: /\n\nSitemap: ${siteUrl}/sitemap.xml\n`);
-  console.log(`Built ${movies.length} movie pages.`);
 }
 
 if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
