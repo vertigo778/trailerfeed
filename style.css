@@ -1,10 +1,19 @@
+@font-face {
+  font-family: "Archivo";
+  src: url("fonts/archivo-latin.woff2") format("woff2");
+  font-weight: 400 900;
+  font-stretch: 62% 125%;
+  font-display: swap;
+}
 :root {
-  --bg: #0d0e11;
-  --surface: #17191e;
-  --surface-2: #20232a;
-  --text: #f1f2f4;
-  --muted: #9aa0ab;
+  /* Trailerfeed brand: booth dark, projector amber, screen white */
+  --bg: #0e0f13;
+  --surface: #191b21;
+  --surface-2: #23262e;
+  --text: #f4efe6;
+  --muted: #a29d94;
   --accent: #ffb547;
+  --display: "Archivo", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --radius: 12px;
   color-scheme: dark;
 }
@@ -17,8 +26,10 @@ body {
 }
 .top, main, .foot { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
 .top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; padding-top: 18px; padding-bottom: 14px; }
-.brand { color: var(--text); text-decoration: none; font-weight: 800; font-size: 1.25rem; letter-spacing: -0.01em; }
-.brand::before { content: "▶"; color: var(--accent); margin-right: 8px; font-size: 0.9em; }
+.brand { display: inline-flex; align-items: center; line-height: 0; border-radius: 6px; }
+.brand img { display: block; height: 25px; width: auto; }
+.brand:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+h1, h2, .week-head { font-family: var(--display); font-stretch: 112%; letter-spacing: -0.015em; }
 .updated { color: var(--muted); font-size: 0.85rem; }
 
 .player { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: var(--radius); overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.5); }
@@ -91,5 +102,12 @@ a.updated:hover { color: var(--text); }
 .foot-links a { color: var(--text); text-decoration: none; }
 .foot-links a:hover { text-decoration: underline; }
 .foot p { margin: 0; }
+.foot { border-top: 1px solid var(--surface-2); margin-top: 48px; }
+.foot-brand { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; color: var(--muted); font-size: 0.85rem; }
+.foot-brand img { flex: none; }
+.foot-brand strong { color: var(--text); font-family: var(--display); font-stretch: 112%; }
+.foot-brand a { color: var(--accent); text-decoration: none; }
+.foot-brand a:hover { text-decoration: underline; }
+@media (max-width: 600px) { .brand img { height: 22px; } }
 .foot .disclosure { margin: 0 0 4px; }
 .disclosure a { color: inherit; }
