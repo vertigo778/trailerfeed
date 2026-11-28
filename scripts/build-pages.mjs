@@ -121,6 +121,7 @@ export function moviePage(m, { siteUrl, now = new Date(), section = SECTIONS[0] 
   <meta name="twitter:image" content="${esc(t.thumbnail)}">
   <link rel="stylesheet" href="../../style.css">
   <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, "\\u003c")}</script>
+  <script src="../../analytics.js" defer></script>
 </head>
 <body>
   <header class="top">
