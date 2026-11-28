@@ -12,6 +12,7 @@ data/trailers.json                the feed (written by the Action)
 scripts/fetch-trailers.mjs        the daily YouTube search (Node 20+, no dependencies)
 scripts/build-pages.mjs           builds title pages, hub pages, RSS feeds, sitemap.xml and robots.txt
 data/pages.json                   every title page ever built, so pages stay up after trailers leave the feed
+content/notes/<tab>/<slug>.txt    optional: your own paragraphs for a title page
 config/links.json                 "Get tickets" / "Watch on" / "Where to watch" button links
 scripts/test/                     unit tests and sample data for local previews
 .github/workflows/update-trailers.yml   the daily job
@@ -116,6 +117,19 @@ The script also writes:
 - **More new trailers** on every title page: links to the 8 newest other titles in the same tab.
 - **RSS feeds**: `/feed.xml` (all tabs) and `/movies/feed.xml`, `/tv/feed.xml`, `/games/feed.xml`, 50 newest trailers each, linking to title pages. Auto-posting and newsletter tools can read these.
 - **Sitemap dates** per page: the upload date of the title's newest trailer, so search engines can tell which pages are new.
+- **Weekly roundups** at `/movies/week/<monday>/` (and `/tv/`, `/games/`): every trailer that came out that week, most viewed first, with links to the weeks before and after. Weeks start on Monday, like the home page.
+- **Coming soon** at `/movies/coming-soon/` and `/games/coming-soon/`: upcoming releases grouped by month, soonest first.
+- On each title page: the kind of each trailer (Teaser, Final trailer, Season 2 trailer, Gameplay trailer...), a fact line (release date or streaming service, number of trailers), breadcrumbs, and a description that leads with those facts.
+
+`data/pages.json` keeps up to 20 trailers per title, so pages and weekly roundups keep their trailers after they leave the feed, and every page is rebuilt each day (ticket windows and links stay current).
+
+### Your own words on a title page
+
+Google ranks pages with original text above pages that only repeat a summary. To add a few sentences of your own (cast, director, what the trailer shows), create `content/notes/<tab>/<slug>.txt`, for example `content/notes/movies/dune-part-three.txt`. Separate paragraphs with a blank line. They show under the trailer as "About <title>" on the next build. Start with movies opening in the next 60 days, since those pages show the ticket button.
+
+### Click tracking
+
+`analytics.js` sends a GA4 event `affiliate_click` when someone clicks a ticket or watch button, with `link_kind` (`tickets` or `watch`) and `item_name` (the title). To see it by title in GA4 reports, register `link_kind` and `item_name` as custom dimensions (Admin > Custom definitions).
 
 Buttons come from `config/links.json`:
 

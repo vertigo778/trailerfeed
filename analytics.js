@@ -18,6 +18,19 @@
     window.gtag("js", new Date());
     window.gtag("config", GA_ID);
     load("https://www.googletagmanager.com/gtag/js?id=" + encodeURIComponent(GA_ID));
+    // Count ticket and watch button clicks as "affiliate_click" (kind = tickets or watch), so GA4
+    // shows which titles send people to Fandango and the streamers.
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a.btn-tickets, a.btn-watch");
+      if (!a) return;
+      var h1 = document.querySelector("h1");
+      window.gtag("event", "affiliate_click", {
+        link_kind: a.classList.contains("btn-tickets") ? "tickets" : "watch",
+        link_text: a.textContent, link_url: a.href,
+        item_name: (h1 && h1.childNodes[0] ? h1.childNodes[0].textContent : document.title).trim(),
+        transport_type: "beacon"
+      });
+    });
   }
   if (GTM_ID) {
     window.dataLayer.push({ "gtm.start": new Date().getTime(), event: "gtm.js" });

@@ -111,3 +111,18 @@ a.updated:hover { color: var(--text); }
 @media (max-width: 600px) { .brand img { height: 22px; } }
 .foot .disclosure { margin: 0 0 4px; }
 .disclosure a { color: inherit; }
+
+/* SEO pages: breadcrumbs, fact line, own notes, weekly and coming-soon lists */
+.crumbs { margin: 4px 0 12px; font-size: 0.85rem; color: var(--muted); }
+.crumbs a { color: var(--muted); }
+.crumbs a:hover { color: var(--text); }
+.facts { margin: 10px 0 0; max-width: 72ch; color: var(--text); font-weight: 500; line-height: 1.5; }
+.about-title { margin-top: 28px; max-width: 72ch; line-height: 1.65; }
+.about-title h2 { font-size: 1.2rem; margin: 0 0 8px; }
+.about-title p { margin: 0 0 12px; }
+.lead { margin: -4px 0 18px; color: var(--muted); max-width: 72ch; line-height: 1.5; }
+.pager, .hub-links { display: flex; flex-wrap: wrap; gap: 8px 18px; margin: 18px 0 0; }
+.hub-links { margin: -4px 0 18px; }
+.pager a, .hub-links a { color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9rem; }
+.pager a:hover, .hub-links a:hover { text-decoration: underline; }
+.pager a:last-child:not(:first-child) { margin-left: auto; }
