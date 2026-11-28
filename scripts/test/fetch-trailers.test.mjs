@@ -173,6 +173,9 @@ test("each feed keeps its own kind of trailer", () => {
   assert.ok(ok("Ghost of Yotei - Official Launch Trailer", "IGN", "games"));
   assert.ok(ok("Dune: Part Three - Exclusive Teaser Trailer", "IGN", "movies"));
   assert.equal(movieName("The Bear Season 5 | Official Trailer"), "The Bear");
+  assert.equal(movieName("Tuesday Morning - Release Date Reveal Trailer | PS5 Games"), "Tuesday Morning");
+  assert.equal(movieName("KuloNiku: Bowl Up! – Launch Trailer – Nintendo Switch 2"), "KuloNiku: Bowl Up!");
+  assert.equal(movieName("Tuesday Morning - Official Release Date Trailer"), "Tuesday Morning");
 });
 
 test("dropWrongFeed removes TV from movies, non-English originals and unknown streamer titles", () => {
@@ -195,4 +198,13 @@ test("TV lookups use TMDB's TV search and flag films", async () => {
   const show = await lookupMovie("The Bear", { tmdbKey: "k", fetchFn, now: new Date("2026-11-27"), type: "tv" });
   assert.deepEqual(show, { movieTitle: "The Bear", summary: "A chef.", releaseDate: "2022-06-23", tmdbId: 7, originalLanguage: "en" });
   assert.deepEqual(await lookupMovie("Some Film", { tmdbKey: "k", fetchFn, now: new Date("2026-11-27"), type: "tv" }), { isMovie: true });
+});
+
+test("the games feed merges an update's trailer into the game's", () => {
+  const list = [
+    { id: "a", title: "The Division 2 - Official Spearfall Launch Trailer", views: 72000, publishedAt: "2026-11-25T16:00:00Z" },
+    { id: "b", title: "The Division 2: Spearfall - Official Launch Trailer", views: 236000, publishedAt: "2026-11-25T15:00:00Z" },
+  ];
+  assert.deepEqual(dedupe(list, CATEGORIES.games).map((t) => t.id), ["b"]);
+  assert.deepEqual(dedupe(list, CATEGORIES.movies).map((t) => t.id), ["a", "b"]);
 });
