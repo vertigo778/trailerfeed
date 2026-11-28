@@ -10,7 +10,8 @@ _headers                          cache rules for Cloudflare
 wrangler.jsonc, .assetsignore     Cloudflare Workers config (static files, plus branch previews)
 data/trailers.json                the feed (written by the Action)
 scripts/fetch-trailers.mjs        the daily YouTube search (Node 20+, no dependencies)
-scripts/build-pages.mjs           builds movies/<slug>/ pages, sitemap.xml and robots.txt
+scripts/build-pages.mjs           builds title pages, hub pages, RSS feeds, sitemap.xml and robots.txt
+data/pages.json                   every title page ever built, so pages stay up after trailers leave the feed
 config/links.json                 "Get tickets" / "Watch on" / "Where to watch" button links
 scripts/test/                     unit tests and sample data for local previews
 .github/workflows/update-trailers.yml   the daily job
@@ -106,6 +107,15 @@ You can tune this without editing code by adding repository **variables** (**Set
 ## Movie pages and buttons
 
 After each daily fetch, `scripts/build-pages.mjs` writes one page per movie at `/movies/<slug>/`. Each page has the trailer, summary and release date, a proper title and description, Open Graph and Twitter tags for link previews, and schema.org `Movie` data for search engines. It also writes `sitemap.xml` and `robots.txt`. Submit `https://<your-site>/sitemap.xml` in [Google Search Console](https://search.google.com/search-console) so the pages get indexed.
+
+Pages are permanent. `data/pages.json` remembers every title with its URL, so when a trailer ages out of the feed its page stays up with the last version it had, and a title that comes back keeps its old URL. To remove a page, delete its folder and its entry in `data/pages.json`.
+
+The script also writes:
+
+- **Hub pages** at `/movies/`, `/tv/` and `/games/`, listing every title newest first, linked from the home page footer and from each title page.
+- **More new trailers** on every title page: links to the 8 newest other titles in the same tab.
+- **RSS feeds**: `/feed.xml` (all tabs) and `/movies/feed.xml`, `/tv/feed.xml`, `/games/feed.xml`, 50 newest trailers each, linking to title pages. Auto-posting and newsletter tools can read these.
+- **Sitemap dates** per page: the upload date of the title's newest trailer, so search engines can tell which pages are new.
 
 Buttons come from `config/links.json`:
 

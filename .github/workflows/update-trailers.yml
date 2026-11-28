@@ -57,7 +57,7 @@ jobs:
 
       - name: Commit data if it changed
         run: |
-          git add -A data movies tv games sitemap.xml robots.txt
+          git add -A data movies tv games feed.xml sitemap.xml robots.txt
           if git diff --cached --quiet; then
             echo "No changes."
             exit 0

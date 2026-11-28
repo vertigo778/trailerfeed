@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+<channel>
+  <title>New TV trailers · Trailerfeed</title>
+  <link>https://trailerfeed.io/</link>
+  <description>Every new official TV trailer, updated daily.</description>
+  <language>en-us</language>
+  <atom:link href="https://trailerfeed.io/tv/feed.xml" rel="self" type="application/rss+xml"/>
+  <item>
+    <title>The Murder of JonBenét Ramsey | Official Trailer | Netflix</title>
+    <link>https://trailerfeed.io/tv/the-murder-of-jonbenet-ramsey/</link>
+    <guid isPermaLink="false">youtube:3cSNBmJxHhg</guid>
+    <pubDate>Tue, 24 Nov 2026 15:00:00 GMT</pubDate>
+    <category>TV</category>
+    <description>&lt;p&gt;&lt;img src=&quot;https://i.ytimg.com/vi/3cSNBmJxHhg/maxresdefault.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;&lt;p&gt;The series centers on one of the most infamous unsolved murder cases in American history, and the devastating personal and public reckoning that followed the death of JonBenet Ramsey on Christmas night in 1996.&lt;/p&gt;&lt;p&gt;Netflix&lt;/p&gt;</description>
+    <media:thumbnail url="https://i.ytimg.com/vi/3cSNBmJxHhg/maxresdefault.jpg"/>
+  </item>
+  <item>
+    <title>Lil Kev | Season 2 Official Trailer | Paramount+</title>
+    <link>https://trailerfeed.io/tv/lil-kev/</link>
+    <guid isPermaLink="false">youtube:SG-Cx_2RwF4</guid>
+    <pubDate>Mon, 23 Nov 2026 16:12:05 GMT</pubDate>
+    <category>TV</category>
+    <description>&lt;p&gt;&lt;img src=&quot;https://i.ytimg.com/vi/SG-Cx_2RwF4/maxresdefault.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;&lt;p&gt;Set in 1993 North Philadelphia, follow 12-year-old Kevin Hart, whose wild imagination and unshakable optimism constantly collide with his neighborhood&apos;s harsh realities. At the same time, his no-nonsense mother Nancy juggles night shifts as an E.R. nurse while waging a…&lt;/p&gt;&lt;p&gt;Paramount Plus&lt;/p&gt;</description>
+    <media:thumbnail url="https://i.ytimg.com/vi/SG-Cx_2RwF4/maxresdefault.jpg"/>
+  </item>
+  <item>
+    <title>TIMBERLAKE — Official Trailer | Apple TV</title>
+    <link>https://trailerfeed.io/tv/timberlake/</link>
+    <guid isPermaLink="false">youtube:sDMNuKvCXOc</guid>
+    <pubDate>Mon, 23 Nov 2026 13:59:58 GMT</pubDate>
+    <category>TV</category>
+    <description>&lt;p&gt;&lt;img src=&quot;https://i.ytimg.com/vi/sDMNuKvCXOc/maxresdefault.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;&lt;p&gt;After 30 years of unparalleled success and relentless scrutiny, Justin Timberlake looks at his life today and reckons with the drama, the headlines, and the cost of never slowing down.&lt;/p&gt;&lt;p&gt;Apple TV&lt;/p&gt;</description>
+    <media:thumbnail url="https://i.ytimg.com/vi/sDMNuKvCXOc/maxresdefault.jpg"/>
+  </item>
+  <item>
+    <title>The Trust | Official Trailer | Netflix</title>
+    <link>https://trailerfeed.io/tv/the-trust/</link>
+    <guid isPermaLink="false">youtube:xVjpzd-fsJU</guid>
+    <pubDate>Mon, 23 Nov 2026 08:00:00 GMT</pubDate>
+    <category>TV</category>
+    <description>&lt;p&gt;&lt;img src=&quot;https://i.ytimg.com/vi/xVjpzd-fsJU/maxresdefault.jpg&quot; alt=&quot;&quot;&gt;&lt;/p&gt;&lt;p&gt;In this reality series, strangers compete to share a quarter of a million dollars. Will they split it evenly — or cut each other out to raise their take?&lt;/p&gt;&lt;p&gt;Netflix&lt;/p&gt;</description>
+    <media:thumbnail url="https://i.ytimg.com/vi/xVjpzd-fsJU/maxresdefault.jpg"/>
+  </item>
+</channel>
+</rss>

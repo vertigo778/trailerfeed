@@ -1,0 +1,169 @@
+{
+ "movies": {
+  "avengers-doomsday": {
+   "key": "tmdb:1003596",
+   "name": "Avengers: Doomsday",
+   "thumbnail": "https://i.ytimg.com/vi/Wb8Tq_HD4E8/maxresdefault.jpg",
+   "lastmod": "2026-11-26",
+   "releaseDate": "2026-12-16"
+  },
+  "paper-tiger": {
+   "key": "tmdb:1381273",
+   "name": "Paper Tiger",
+   "thumbnail": "https://i.ytimg.com/vi/dUxQ3ltEEwU/maxresdefault.jpg",
+   "lastmod": "2026-11-24",
+   "releaseDate": "2026-11-13"
+  },
+  "dune-part-three": {
+   "key": "tmdb:1170608",
+   "name": "Dune: Part Three",
+   "thumbnail": "https://i.ytimg.com/vi/ErhPysTk6Jc/maxresdefault.jpg",
+   "lastmod": "2026-11-24",
+   "releaseDate": "2026-12-15"
+  },
+  "mr-irrelevant": {
+   "key": "tmdb:1372443",
+   "name": "Mr. Irrelevant",
+   "thumbnail": "https://i.ytimg.com/vi/5DddMUVQ5xQ/maxresdefault.jpg",
+   "lastmod": "2026-11-23",
+   "releaseDate": "2026-12-25"
+  },
+  "the-trust": {
+   "key": "tmdb:1843733",
+   "name": "The Trust",
+   "thumbnail": "https://i.ytimg.com/vi/xVjpzd-fsJU/maxresdefault.jpg",
+   "lastmod": "2026-11-23",
+   "releaseDate": ""
+  }
+ },
+ "tv": {
+  "the-murder-of-jonbenet-ramsey": {
+   "key": "tmdb:270596",
+   "name": "The Murder of JonBenét Ramsey",
+   "thumbnail": "https://i.ytimg.com/vi/3cSNBmJxHhg/maxresdefault.jpg",
+   "lastmod": "2026-11-24",
+   "releaseDate": "2026-12-10"
+  },
+  "lil-kev": {
+   "key": "tmdb:283141",
+   "name": "Lil Kev",
+   "thumbnail": "https://i.ytimg.com/vi/SG-Cx_2RwF4/maxresdefault.jpg",
+   "lastmod": "2026-11-23",
+   "releaseDate": "2025-03-06"
+  },
+  "timberlake": {
+   "key": "tmdb:343253",
+   "name": "Timberlake",
+   "thumbnail": "https://i.ytimg.com/vi/sDMNuKvCXOc/maxresdefault.jpg",
+   "lastmod": "2026-11-23",
+   "releaseDate": "2026-12-10"
+  },
+  "the-trust": {
+   "key": "tmdb:241168",
+   "name": "The Trust",
+   "thumbnail": "https://i.ytimg.com/vi/xVjpzd-fsJU/maxresdefault.jpg",
+   "lastmod": "2026-11-23",
+   "releaseDate": "2024-01-10"
+  }
+ },
+ "games": {
+  "bad-inmate": {
+   "key": "key:bad inmate",
+   "name": "Bad Inmate",
+   "thumbnail": "https://i.ytimg.com/vi/XqH3jvbbvGM/maxresdefault.jpg",
+   "lastmod": "2026-11-27",
+   "releaseDate": ""
+  },
+  "tuesday-morning": {
+   "key": "key:tuesday morning",
+   "name": "Tuesday Morning",
+   "thumbnail": "https://i.ytimg.com/vi/TBzQebgt9Ww/maxresdefault.jpg",
+   "lastmod": "2026-11-26",
+   "releaseDate": ""
+  },
+  "hitman-world-of-assassination-bawma-elusive-target": {
+   "key": "key:hitman world of assassination bawma elusive target",
+   "name": "Hitman World of Assassination - Bawma Elusive Target",
+   "thumbnail": "https://i.ytimg.com/vi/y3E0aK1-C2Y/maxresdefault.jpg",
+   "lastmod": "2026-11-26",
+   "releaseDate": ""
+  },
+  "kuloniku-bowl-up": {
+   "key": "key:kuloniku bowl up",
+   "name": "KuloNiku: Bowl Up!",
+   "thumbnail": "https://i.ytimg.com/vi/MiE6-XaL8Hw/maxresdefault.jpg",
+   "lastmod": "2026-11-25",
+   "releaseDate": ""
+  },
+  "the-division-2": {
+   "key": "key:the division 2",
+   "name": "The Division 2",
+   "thumbnail": "https://i.ytimg.com/vi/ENtKxio17fE/maxresdefault.jpg",
+   "lastmod": "2026-11-25",
+   "releaseDate": ""
+  },
+  "the-division-2-spearfall": {
+   "key": "key:the division 2 spearfall",
+   "name": "The Division 2: Spearfall",
+   "thumbnail": "https://i.ytimg.com/vi/CWm9cVjrPNk/maxresdefault.jpg",
+   "lastmod": "2026-11-25",
+   "releaseDate": ""
+  },
+  "origament-a-paper-adventure": {
+   "key": "key:origament a paper adventure",
+   "name": "Origament: A Paper Adventure",
+   "thumbnail": "https://i.ytimg.com/vi/m8Y0a_zn1xk/maxresdefault.jpg",
+   "lastmod": "2026-11-25",
+   "releaseDate": ""
+  },
+  "dead-by-daylight-terrifier-chapter": {
+   "key": "key:dead by daylight terrifier chapter",
+   "name": "Dead by Daylight - Terrifier Chapter",
+   "thumbnail": "https://i.ytimg.com/vi/-wJapkOeArE/maxresdefault.jpg",
+   "lastmod": "2026-11-24",
+   "releaseDate": ""
+  },
+  "marvel-rivals": {
+   "key": "key:marvel rivals",
+   "name": "Marvel Rivals",
+   "thumbnail": "https://i.ytimg.com/vi/VUlxa_DPco4/maxresdefault.jpg",
+   "lastmod": "2026-11-24",
+   "releaseDate": ""
+  },
+  "gothic-3-classic-release": {
+   "key": "key:gothic 3 classic release",
+   "name": "Gothic 3 Classic - Release",
+   "thumbnail": "https://i.ytimg.com/vi/AzDmwM79cAA/maxresdefault.jpg",
+   "lastmod": "2026-11-24",
+   "releaseDate": ""
+  },
+  "the-floor-above": {
+   "key": "key:the floor above",
+   "name": "The Floor Above",
+   "thumbnail": "https://i.ytimg.com/vi/vrIuiy_90-Y/maxresdefault.jpg",
+   "lastmod": "2026-11-23",
+   "releaseDate": ""
+  },
+  "wingsuit-simulator": {
+   "key": "key:wingsuit simulator",
+   "name": "Wingsuit Simulator",
+   "thumbnail": "https://i.ytimg.com/vi/-CjMTtCbUhU/maxresdefault.jpg",
+   "lastmod": "2026-11-22",
+   "releaseDate": ""
+  },
+  "astrider": {
+   "key": "key:astrider",
+   "name": "Astrider",
+   "thumbnail": "https://i.ytimg.com/vi/ljEukoe7IyY/maxresdefault.jpg",
+   "lastmod": "2026-11-22",
+   "releaseDate": ""
+  },
+  "fortnite-treasure-hunters-week-4": {
+   "key": "key:fortnite treasure hunters week 4",
+   "name": "Fortnite Treasure Hunters | Week 4",
+   "thumbnail": "https://i.ytimg.com/vi/MUeEDFTCJkc/maxresdefault.jpg",
+   "lastmod": "2026-11-22",
+   "releaseDate": ""
+  }
+ }
+}
