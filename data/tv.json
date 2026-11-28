@@ -1,14 +1,14 @@
 {
-  "updatedAt": "2026-11-28T03:16:57.638Z",
-  "count": 4,
+  "updatedAt": "2026-11-28T08:09:22.852Z",
+  "count": 42,
   "trailers": [
     {
       "id": "3cSNBmJxHhg",
       "title": "The Murder of JonBenét Ramsey | Official Trailer | Netflix",
       "channelTitle": "Netflix",
       "publishedAt": "2026-11-24T15:00:00Z",
-      "views": 925121,
-      "likes": 7134,
+      "views": 939220,
+      "likes": 7202,
       "thumbnail": "https://i.ytimg.com/vi/3cSNBmJxHhg/maxresdefault.jpg",
       "audioLanguage": "en-US",
       "language": "en",
@@ -33,8 +33,8 @@
       "title": "Lil Kev | Season 2 Official Trailer | Paramount+",
       "channelTitle": "Paramount Plus",
       "publishedAt": "2026-11-23T16:12:05Z",
-      "views": 143119,
-      "likes": 1971,
+      "views": 143789,
+      "likes": 1978,
       "thumbnail": "https://i.ytimg.com/vi/SG-Cx_2RwF4/maxresdefault.jpg",
       "audioLanguage": "en-US",
       "language": "en",
@@ -59,8 +59,8 @@
       "title": "TIMBERLAKE — Official Trailer | Apple TV",
       "channelTitle": "Apple TV",
       "publishedAt": "2026-11-23T13:59:58Z",
-      "views": 4153380,
-      "likes": 4187,
+      "views": 4162477,
+      "likes": 4244,
       "thumbnail": "https://i.ytimg.com/vi/sDMNuKvCXOc/maxresdefault.jpg",
       "audioLanguage": "en",
       "language": "en",
@@ -85,8 +85,8 @@
       "title": "The Trust | Official Trailer | Netflix",
       "channelTitle": "Netflix",
       "publishedAt": "2026-11-23T08:00:00Z",
-      "views": 840288,
-      "likes": 7965,
+      "views": 843958,
+      "likes": 7981,
       "thumbnail": "https://i.ytimg.com/vi/xVjpzd-fsJU/maxresdefault.jpg",
       "audioLanguage": "en-US",
       "language": "en",
@@ -103,6 +103,945 @@
           "kind": "watch",
           "label": "Watch on Netflix",
           "url": "https://www.netflix.com/search?q=The%20Trust"
+        }
+      ]
+    },
+    {
+      "id": "B1cLo1po_8M",
+      "title": "Presumed Innocent — Season 2 Official Teaser | Apple TV",
+      "channelTitle": "Apple TV",
+      "publishedAt": "2026-11-20T13:59:55Z",
+      "views": 899764,
+      "likes": 5014,
+      "thumbnail": "https://i.ytimg.com/vi/B1cLo1po_8M/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "When does Presumed Innocent premiere? Season 2 of Presumed Innocent premieres February 19.",
+      "movieTitle": "Presumed Innocent",
+      "summary": "A horrific murder upends the Chicago Prosecuting Attorney's Office when one of its own is suspected of the crime—leaving the accused fighting to keep his family together.",
+      "releaseDate": "2024-06-11",
+      "tmdbId": 156933,
+      "originalLanguage": "en",
+      "movieSlug": "presumed-innocent",
+      "pagePath": "tv/presumed-innocent/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Apple TV",
+          "url": "https://tv.apple.com/search?term=Presumed%20Innocent"
+        }
+      ]
+    },
+    {
+      "id": "8OomIu5JJwQ",
+      "title": "Invincible Season 5 - Official Teaser | Prime Video",
+      "channelTitle": "Prime Video",
+      "publishedAt": "2026-11-19T17:00:01Z",
+      "views": 10027259,
+      "likes": 295459,
+      "thumbnail": "https://i.ytimg.com/vi/8OomIu5JJwQ/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "Welcome back to Burger Mart! Please enjoy this update on Season 5 of Invincible.",
+      "movieTitle": "INVINCIBLE",
+      "summary": "Mark Grayson is a normal teenager except for the fact that his father is the most powerful superhero on the planet. Shortly after his seventeenth birthday, Mark begins to develop powers of his own and enters into his father's tutelage.",
+      "releaseDate": "2021-03-25",
+      "tmdbId": 95557,
+      "originalLanguage": "en",
+      "movieSlug": "invincible",
+      "pagePath": "tv/invincible/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Prime Video",
+          "url": "https://www.amazon.com/s?k=INVINCIBLE&i=instant-video"
+        }
+      ]
+    },
+    {
+      "id": "NLbrYUlMdhc",
+      "title": "Mayfair Witches: Salem Coven | Official Trailer ft. Alexandra Daddario | December 30 on AMC & AMC+",
+      "channelTitle": "amc+",
+      "publishedAt": "2026-11-19T16:00:42Z",
+      "views": 5651209,
+      "likes": 1428,
+      "thumbnail": "https://i.ytimg.com/vi/NLbrYUlMdhc/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "",
+      "movieSlug": "mayfair-witches-salem-coven",
+      "pagePath": "tv/mayfair-witches-salem-coven/",
+      "links": []
+    },
+    {
+      "id": "kufMgxRyA9k",
+      "title": "Living The Dream | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-11-19T13:00:00Z",
+      "views": 500856,
+      "likes": 11243,
+      "thumbnail": "https://i.ytimg.com/vi/kufMgxRyA9k/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "At a London ecofood corporation, two cash-strapped best friends stumble into wild misadventures as they try to climb the career ladder and find love. Living the Dream, an 8-part series, coming 18 December, only on Netflix.",
+      "movieTitle": "Living the Dream",
+      "summary": "A British family, the Pembertons, decide it’s time to leave rainy England and move to the sunshine state of Florida. They've bought an RV Park with plans for a booming family-run business, but it soon turns out that they are not going to be living the dream they hoped.",
+      "releaseDate": "2017-11-02",
+      "tmdbId": 73131,
+      "originalLanguage": "en",
+      "movieSlug": "living-the-dream",
+      "pagePath": "tv/living-the-dream/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Living%20the%20Dream"
+        }
+      ]
+    },
+    {
+      "id": "wAFHBHXUzWE",
+      "title": "Frisco King | Official Trailer | Paramount+",
+      "channelTitle": "Paramount Plus",
+      "publishedAt": "2026-11-18T16:00:04Z",
+      "views": 11790956,
+      "likes": 12579,
+      "thumbnail": "https://i.ytimg.com/vi/wAFHBHXUzWE/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "The town may be small, but the hustles are larger than life. Oscar® nominee Samuel L. Jackson rises to power as Russell Lee Washington Jr. in the trailer and key art for Frisco King, the highly anticipated original series from Oscar® nominee Taylor Sheridan. The game changes on December 18 when Frisco King premieres with two episodes, followed by new episodes every Friday, exclusively on Paramount+.",
+      "movieTitle": "Frisco King",
+      "summary": "New Orleans gangster Russell Lee Washington Jr. lands in Frisco, Texas, where he transforms small hustles into big business, with the help of an ambitious protégé, a loyal driver, and a growing network of eccentric partners.",
+      "releaseDate": "2026-12-18",
+      "tmdbId": 296244,
+      "originalLanguage": "en",
+      "movieSlug": "frisco-king",
+      "pagePath": "tv/frisco-king/",
+      "links": []
+    },
+    {
+      "id": "WR-wo2hHMig",
+      "title": "Raising The Cannons | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-11-17T17:00:00Z",
+      "views": 303069,
+      "likes": 2181,
+      "thumbnail": "https://i.ytimg.com/vi/WR-wo2hHMig/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Go beyond the headlines as Nick Cannon balances 12 children, 6 mothers, a massive career, and personal health battles. RAISING THE CANNONS offers an unfiltered inside look at fatherhood, fame, and the Cannon family name. Nothing is off limits.",
+      "movieTitle": "Raising the Cannons",
+      "summary": "Nick Cannon has spent decades entertaining the world. Now he’s letting cameras into the one role that matters most to him: fatherhood.",
+      "releaseDate": "2026-12-18",
+      "tmdbId": 342511,
+      "originalLanguage": "en",
+      "movieSlug": "raising-the-cannons",
+      "pagePath": "tv/raising-the-cannons/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Raising%20the%20Cannons"
+        }
+      ]
+    },
+    {
+      "id": "KInfw7kCPkc",
+      "title": "3 Body Problem: Season 2 | Official Teaser | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-11-17T15:00:00Z",
+      "views": 1499687,
+      "likes": 28464,
+      "thumbnail": "https://i.ytimg.com/vi/KInfw7kCPkc/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Hello. We haven’t spoken with you for a long time. But we’ve been watching.",
+      "movieTitle": "3 Body Problem",
+      "summary": "Across continents and decades, five brilliant friends make earth-shattering discoveries as the laws of science unravel and an existential threat emerges.",
+      "releaseDate": "2024-03-21",
+      "tmdbId": 108545,
+      "originalLanguage": "en",
+      "movieSlug": "3-body-problem",
+      "pagePath": "tv/3-body-problem/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=3%20Body%20Problem"
+        }
+      ]
+    },
+    {
+      "id": "xjCzJV580xE",
+      "title": "My Next Guest Needs No Introduction With David Letterman: Season 7 | Official Teaser | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-11-17T14:00:00Z",
+      "views": 609551,
+      "likes": 2287,
+      "thumbnail": "https://i.ytimg.com/vi/xjCzJV580xE/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Dave digs in with Matt Damon, Julia Roberts, Jimmy Kimmel and free solo legend Alex Honnold for an unfiltered season of candid and quirky interviews.",
+      "movieTitle": "My Next Guest Needs No Introduction with David Letterman",
+      "summary": "Late-night TV legend David Letterman hosts an intimate talk show featuring insightful conversations and fun-filled excursions with notable figures.",
+      "releaseDate": "2018-01-12",
+      "tmdbId": 76178,
+      "originalLanguage": "en",
+      "movieSlug": "my-next-guest-needs-no-introduction-with-david-letterman",
+      "pagePath": "tv/my-next-guest-needs-no-introduction-with-david-letterman/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=My%20Next%20Guest%20Needs%20No%20Introduction%20with%20David%20Letterman"
+        }
+      ]
+    },
+    {
+      "id": "QL-Z4fYqEYc",
+      "title": "Garfield | Official Trailer | Paramount+",
+      "channelTitle": "Paramount Plus",
+      "publishedAt": "2026-11-16T17:00:01Z",
+      "views": 344971,
+      "likes": 14399,
+      "thumbnail": "https://i.ytimg.com/vi/QL-Z4fYqEYc/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "In this fresh take on a beloved classic, the original animated series features Garfield (voiced by Lamorne Morris) and Jon Arbuckle living in the big city, surrounded by a colorful cast of familiar favorites and eccentric new characters. Inspired by Jim Davis’s iconic comic strip, the series brings Garfield’s signature sarcasm, selfishness, and unapologetic laziness to a world that refuses to leave him…",
+      "movieTitle": "Garfield",
+      "summary": "Follows Garfield, the lasagna-loving orange cat, along with his owner Jon Arbuckle and Odie the dog, as they navigate daily life and various adventures.",
+      "releaseDate": "2026-12-11",
+      "tmdbId": 255834,
+      "originalLanguage": "en",
+      "movieSlug": "garfield",
+      "pagePath": "tv/garfield/",
+      "links": []
+    },
+    {
+      "id": "ZiMUF51KxIM",
+      "title": "Marvel Rivals Season 11 Trailer | Doomsday | Marvel Rivals",
+      "channelTitle": "Marvel Entertainment",
+      "publishedAt": "2026-11-13T15:00:04Z",
+      "views": 631626,
+      "likes": 6240,
+      "thumbnail": "https://i.ytimg.com/vi/ZiMUF51KxIM/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "Two timelines, the present and the future, are on a course for an Incursion! New York and Nueva York are about to collide head-on!",
+      "summary": "Two timelines, the present and the future, are on a course for an Incursion! New York and Nueva York are about to collide head-on!",
+      "movieSlug": "marvel-rivals",
+      "pagePath": "tv/marvel-rivals/",
+      "links": []
+    },
+    {
+      "id": "7eqt8zY3D0Y",
+      "title": "World War II: Behind Enemy Lines | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-11-11T16:30:00Z",
+      "views": 2813005,
+      "likes": 13721,
+      "thumbnail": "https://i.ytimg.com/vi/7eqt8zY3D0Y/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Witness one US Army unit's battles, bravery and covert missions from D-Day to V-E Day in never-before-seen restored footage and rare firsthand accounts.",
+      "movieTitle": "World War II: Behind Enemy Lines",
+      "summary": "Follows the 101st Airborne's daring missions inside Nazi-occupied Europe, from D-Day to VE-Day, using colorized and previously unseen archival footage.",
+      "releaseDate": "2026-12-02",
+      "tmdbId": 343798,
+      "originalLanguage": "en",
+      "movieSlug": "world-war-ii-behind-enemy-lines",
+      "pagePath": "tv/world-war-ii-behind-enemy-lines/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=World%20War%20II%3A%20Behind%20Enemy%20Lines"
+        }
+      ]
+    },
+    {
+      "id": "4PUKxO4fwSc",
+      "title": "The Circle | Official Trailer | Hulu",
+      "channelTitle": "Hulu",
+      "publishedAt": "2026-11-10T17:59:51Z",
+      "views": 11211090,
+      "likes": 250,
+      "thumbnail": "https://i.ytimg.com/vi/4PUKxO4fwSc/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "",
+      "movieTitle": "The Circle",
+      "summary": "Status and strategy collide in this social experiment and competition show where online players flirt, befriend and catfish their way toward $100,000.",
+      "releaseDate": "2020-01-01",
+      "tmdbId": 97083,
+      "originalLanguage": "en",
+      "movieSlug": "the-circle",
+      "pagePath": "tv/the-circle/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Hulu",
+          "url": "https://www.hulu.com/search?q=The%20Circle"
+        }
+      ]
+    },
+    {
+      "id": "1d4x_eSdqNc",
+      "title": "Blade Runner 2099 - Final Trailer | Prime Video",
+      "channelTitle": "Prime Video",
+      "publishedAt": "2026-11-09T17:03:37Z",
+      "views": 8884724,
+      "likes": 9326,
+      "thumbnail": "https://i.ytimg.com/vi/1d4x_eSdqNc/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "Whatever you can build, you can destroy. Blade Runner 2099, a new limited series, premieres November 25 only on Prime Video.",
+      "movieTitle": "Blade Runner 2099",
+      "summary": "Fifty years after the events of Blade Runner 2049, Los Angeles has been reborn, just not by humanity. Cora, a fugitive in a final bid to stop running, takes on one last identity: a Blade Runner. Forced to partner with Olwen, a Replicant days from dying, she hunts down a runaway hiding a truth that could collapse their fragile city.",
+      "releaseDate": "2026-11-24",
+      "tmdbId": 171802,
+      "originalLanguage": "en",
+      "movieSlug": "blade-runner-2099",
+      "pagePath": "tv/blade-runner-2099/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Prime Video",
+          "url": "https://www.amazon.com/s?k=Blade%20Runner%202099&i=instant-video"
+        }
+      ]
+    },
+    {
+      "id": "ylYSnvZEH0Y",
+      "title": "Salish's 12 Games of Christmas | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-11-07T15:30:10Z",
+      "views": 2234043,
+      "likes": 27202,
+      "thumbnail": "https://i.ytimg.com/vi/ylYSnvZEH0Y/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Salish Matter and seven of her closest friends go head to head in 12 epic holiday challenges for a mountain of Christmas presents, with her dad, Jordan, as host. But there’s a twist: a Christmas imposter is hiding among them, out to sabotage the games and swipe the gifts. Can they unwrap the culprit before it’s too late? SALISH’S 12 GAMES OF CHRISTMAS arrives on Netflix November 28.",
+      "movieTitle": "Salish's 12 Games of Christmas",
+      "summary": "Salish Matter and seven of her closest friends compete in 12 epic holiday challenges for a mountain of Christmas presents, hosted by her dad, Jordan. But there's a twist: a Christmas imposter is hiding among them, out to sabotage the games and swipe the gifts. Can they unwrap the culprit before it’s too late?",
+      "releaseDate": "2026-11-28",
+      "tmdbId": 341600,
+      "originalLanguage": "en",
+      "movieSlug": "salish-s-12-games-of-christmas",
+      "pagePath": "tv/salish-s-12-games-of-christmas/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Salish's%2012%20Games%20of%20Christmas"
+        }
+      ]
+    },
+    {
+      "id": "sfk6DsN7bh0",
+      "title": "VisionQuest Season 1 Episode 8 Finale Trailer",
+      "channelTitle": "Rotten Tomatoes TV",
+      "publishedAt": "2026-11-05T19:30:00Z",
+      "views": 558324,
+      "likes": 2635,
+      "thumbnail": "https://i.ytimg.com/vi/sfk6DsN7bh0/maxresdefault.jpg",
+      "audioLanguage": "",
+      "language": "en",
+      "descriptionSummary": "US Air Date: November 10, 2026 Network: Disney+ Synopsis: One Vision. One moment. One final surprise.",
+      "summary": "US Air Date: November 10, 2026 Network: Disney+ Synopsis: One Vision. One moment. One final surprise.",
+      "movieSlug": "visionquest-episode-8-finale",
+      "pagePath": "tv/visionquest-episode-8-finale/",
+      "links": []
+    },
+    {
+      "id": "9ZiePpwIlAE",
+      "title": "Bad Monkey — Season 2 Official Trailer | Apple TV",
+      "channelTitle": "Apple TV",
+      "publishedAt": "2026-11-05T16:59:54Z",
+      "views": 2429044,
+      "likes": 3680,
+      "thumbnail": "https://i.ytimg.com/vi/9ZiePpwIlAE/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "When does Bad Monkey season 2 premiere? Bad Monkey season 2 premieres December 2 on Apple TV.",
+      "movieTitle": "Bad Monkey",
+      "summary": "A detective turned restaurant inspector in Southern Florida is pulled into a world of greed and corruption after a tourist finds a severed arm while fishing. And yes, there's a monkey.",
+      "releaseDate": "2024-08-13",
+      "tmdbId": 130853,
+      "originalLanguage": "en",
+      "movieSlug": "bad-monkey",
+      "pagePath": "tv/bad-monkey/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Apple TV",
+          "url": "https://tv.apple.com/search?term=Bad%20Monkey"
+        }
+      ]
+    },
+    {
+      "id": "zDFHivyECDU",
+      "title": "Yellowjackets | Season 4 Official Trailer | Paramount+",
+      "channelTitle": "Paramount Plus",
+      "publishedAt": "2026-11-05T16:00:07Z",
+      "views": 536575,
+      "likes": 8817,
+      "thumbnail": "https://i.ytimg.com/vi/zDFHivyECDU/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "This homecoming is going to sting. Stream the final season of Yellowjackets November 20 with the Paramount+ Premium plan.",
+      "movieTitle": "Yellowjackets",
+      "summary": "This equal parts survival epic, psychological horror story and coming-of-age drama tells the saga of a team of wildly talented high school girls soccer players who become the (un)lucky survivors of a plane crash deep in the remote northern wilderness. The series chronicles their descent from a complicated but thriving team to savage clans, while also tracking the lives they’ve attempted to piece back together nearly 25 years later.",
+      "releaseDate": "2021-11-14",
+      "tmdbId": 117488,
+      "originalLanguage": "en",
+      "movieSlug": "yellowjackets",
+      "pagePath": "tv/yellowjackets/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Where to watch",
+          "url": "https://www.justwatch.com/us/search?q=Yellowjackets"
+        }
+      ]
+    },
+    {
+      "id": "2UUB54kGsKM",
+      "title": "Unaccustomed Earth | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-11-05T16:00:00Z",
+      "views": 626124,
+      "likes": 5514,
+      "thumbnail": "https://i.ytimg.com/vi/2UUB54kGsKM/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Beneath every family tree, secrets take root. UNACCUSTOMED EARTH, inspired by the internationally beloved Jhumpa Lahiri short story collection, premieres December 17.",
+      "movieTitle": "Unaccustomed Earth",
+      "summary": "When a health crisis forces a devoted mother and her family to return to the US, she confronts buried desires that upend her Indian American community.",
+      "releaseDate": "2026-12-17",
+      "tmdbId": 289729,
+      "originalLanguage": "en",
+      "movieSlug": "unaccustomed-earth",
+      "pagePath": "tv/unaccustomed-earth/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Unaccustomed%20Earth"
+        }
+      ]
+    },
+    {
+      "id": "46AEtqYlMlc",
+      "title": "Criminal - Official Teaser | Prime Video",
+      "channelTitle": "Prime Video",
+      "publishedAt": "2026-11-05T15:00:12Z",
+      "views": 2334906,
+      "likes": 17810,
+      "thumbnail": "https://i.ytimg.com/vi/46AEtqYlMlc/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "All you have to do is aim, breathe, and squeeze. From the acclaimed graphic novel series, Criminal comes to Prime Video in two parts on January 13 and 27.",
+      "movieTitle": "Criminal",
+      "summary": "Follow the story of two friends, Leo Patterson and Ricky Lawless, one trying to fight his way out of the world of crime they were raised in, the other desperate to follow in the footsteps of his father, a legendary outlaw. And when Ricky's older brother Tracy returns home from the Army, their tragic family history comes home with him. Drawn into their orbit are Greta, a sharp-tongued car thief from Leo's past, and Mallory, Ricky's girlfriend, who fears what he'll do to get by. Gunfights, heists, and tragic romance are the order of the day, but will anyone make it out alive?",
+      "releaseDate": "2027-01-13",
+      "tmdbId": 243214,
+      "originalLanguage": "en",
+      "movieSlug": "criminal",
+      "pagePath": "tv/criminal/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Prime Video",
+          "url": "https://www.amazon.com/s?k=Criminal&i=instant-video"
+        }
+      ]
+    },
+    {
+      "id": "oMeVvhr7GZw",
+      "title": "Trinity | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-11-04T14:00:01Z",
+      "views": 844184,
+      "likes": 5605,
+      "thumbnail": "https://i.ytimg.com/vi/oMeVvhr7GZw/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "A heroic naval officer’s newfound connection to the secretary of defense leads her to uncover a trail of secrets that may tie him to a global threat. TRINITY arrives on Netflix December 1.",
+      "movieTitle": "Trinity",
+      "summary": "A heroic female naval officer becomes involved with the outwardly charismatic Secretary of Defense, only to discover that he may be at the heart of a dangerous conspiracy.",
+      "releaseDate": "2026-12-01",
+      "tmdbId": 294607,
+      "originalLanguage": "en",
+      "movieSlug": "trinity",
+      "pagePath": "tv/trinity/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Trinity"
+        }
+      ]
+    },
+    {
+      "id": "DGKHIliKyOY",
+      "title": "P-Valley | Season 3 Official Trailer | STARZ",
+      "channelTitle": "STARZ",
+      "publishedAt": "2026-10-29T17:00:02Z",
+      "views": 6796063,
+      "likes": 1836,
+      "thumbnail": "https://i.ytimg.com/vi/DGKHIliKyOY/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "Y’all ready for the re-re-re opening of The Pynk?! The final season of P-Valley begins with a two episode premiere, December 4 on STARZ.",
+      "movieTitle": "P-Valley",
+      "summary": "Down deep in the Mississippi Delta, Trap music meets film noir in this kaleidoscopic story of a little-strip-club-that-could and the big characters who come through its doors—the hopeful, the lost, the broken, the ballers, the beautiful, and the damned.",
+      "releaseDate": "2020-07-12",
+      "tmdbId": 87017,
+      "originalLanguage": "en",
+      "movieSlug": "p-valley",
+      "pagePath": "tv/p-valley/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Where to watch",
+          "url": "https://www.justwatch.com/us/search?q=P-Valley"
+        }
+      ]
+    },
+    {
+      "id": "GvRdyKpcApQ",
+      "title": "It Gets Worse | Official Trailer | Paramount+",
+      "channelTitle": "Paramount Plus",
+      "publishedAt": "2026-10-29T15:00:18Z",
+      "views": 67939,
+      "likes": 406,
+      "thumbnail": "https://i.ytimg.com/vi/GvRdyKpcApQ/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "It Gets Worse premieres November 6 on the Paramount+ Premium Plan.",
+      "movieTitle": "It Gets Worse",
+      "summary": "After being evicted, dysfunctional besties Ethan, Abi and Sam stumble through their twenties, clinging to friendship as the world falls apart.",
+      "releaseDate": "2026-10-22",
+      "tmdbId": 334470,
+      "originalLanguage": "en",
+      "movieSlug": "it-gets-worse",
+      "pagePath": "tv/it-gets-worse/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Where to watch",
+          "url": "https://www.justwatch.com/us/search?q=It%20Gets%20Worse"
+        }
+      ]
+    },
+    {
+      "id": "MAV4nDKZetY",
+      "title": "Cunk on Cinema | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-10-29T14:30:00Z",
+      "views": 1768910,
+      "likes": 32831,
+      "thumbnail": "https://i.ytimg.com/vi/MAV4nDKZetY/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Philomena Cunk is back and will be asking experts all of the hard-hitting questions about the history of cinema, from the invention of the camera, to the New Wave filmmakers of the 60s, right up to entrance of CGI and what the future of AI holds. Cunk will attempt to demystify it all while sitting in lumpy seats with stale popcorn, asking herself where did cinema come from? And why? What does it want? And…",
+      "movieTitle": "Cunk on Cinema",
+      "summary": "Philomena Cunk asks experts all of the hard-hitting questions about the history of cinema, from the invention of the camera, to the New Wave filmmakers of the 60s, right up to the entrance of CGI and what the future of AI holds. Cunk will attempt to demystify it all while sitting in lumpy seats with stale popcorn, asking herself where did cinema come from? And why? What does it want? And why can't it tell us?",
+      "releaseDate": "2026-11-12",
+      "tmdbId": 335981,
+      "originalLanguage": "en",
+      "movieSlug": "cunk-on-cinema",
+      "pagePath": "tv/cunk-on-cinema/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Cunk%20on%20Cinema"
+        }
+      ]
+    },
+    {
+      "id": "KuRYRhP6kag",
+      "title": "Pride and Prejudice | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-10-28T15:00:02Z",
+      "views": 2913678,
+      "likes": 24411,
+      "thumbnail": "https://i.ytimg.com/vi/KuRYRhP6kag/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Hasty first impressions develop into something deeper between Elizabeth Bennet and Mr. Darcy in this faithful yet fresh adaptation of the classic novel.",
+      "movieTitle": "Pride and Prejudice",
+      "summary": "Set in England in the early 19th century, Pride and Prejudice tells the story of Mr and Mrs Bennet's five unmarried daughters after the rich and eligible Mr Bingley and his status-conscious friend, Mr Darcy, have moved into their neighbourhood. While Bingley takes an immediate liking to the eldest Bennet daughter, Jane, Darcy has difficulty adapting to local society and repeatedly clashes with the second-eldest Bennet daughter, Elizabeth.",
+      "releaseDate": "1995-09-24",
+      "tmdbId": 1457,
+      "originalLanguage": "en",
+      "movieSlug": "pride-and-prejudice",
+      "pagePath": "tv/pride-and-prejudice/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Pride%20and%20Prejudice"
+        }
+      ]
+    },
+    {
+      "id": "ir2zni8_tP4",
+      "title": "DIG | Official Trailer | Peacock Original",
+      "channelTitle": "Peacock",
+      "publishedAt": "2026-10-27T16:59:55Z",
+      "views": 15727026,
+      "likes": 9963,
+      "thumbnail": "https://i.ytimg.com/vi/ir2zni8_tP4/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "Synopsis: DIG follows a team of dedicated archaeologists (and less-dedicated college students) who spend their summer working on a dig site in Greece. Their discovery of a rare artifact sends them on the adventure of a lifetime.",
+      "movieTitle": "DIG",
+      "summary": "Follow four women who work at an archeological dig in Greece. When the team uncovers a long-buried secret with the potential to rewrite history, they find themselves at the center of a high-stakes international conspiracy.",
+      "releaseDate": "2026-11-23",
+      "tmdbId": 290826,
+      "originalLanguage": "en",
+      "movieSlug": "dig",
+      "pagePath": "tv/dig/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Peacock",
+          "url": "https://www.peacocktv.com/search?q=DIG"
+        }
+      ]
+    },
+    {
+      "id": "nST9h0NpOYc",
+      "title": "Taken: Natalee Holloway | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-10-21T15:00:00Z",
+      "views": 806485,
+      "likes": 4942,
+      "thumbnail": "https://i.ytimg.com/vi/nST9h0NpOYc/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "On May 30, 2005, 18-year-old Natalee Holloway vanished on a high school graduation trip to Aruba — and never came home. What followed was years of unanswered questions, a missing teenager, and a mother's relentless fight for the truth. Now, over 20 years later, Natalee's mother, Beth, is ready to tell the complete story. With exclusive, unprecedented access to Beth and those who were with Natalee when she…",
+      "movieTitle": "Taken: Natalee Holloway",
+      "summary": "Beth Holloway, Natalee's mother, tells the full, definitive story of the case that's haunted her for the past 20 years - from the day of Natalee's disappearance to the dramatic confession two decades later.",
+      "releaseDate": "2026-11-04",
+      "tmdbId": 338684,
+      "originalLanguage": "en",
+      "movieSlug": "taken-natalee-holloway",
+      "pagePath": "tv/taken-natalee-holloway/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Taken%3A%20Natalee%20Holloway"
+        }
+      ]
+    },
+    {
+      "id": "0JLdH0cPdnc",
+      "title": "The Secret Lives of Mormon Wives: Orange County | Official Trailer | Hulu",
+      "channelTitle": "Hulu",
+      "publishedAt": "2026-10-20T14:59:55Z",
+      "views": 8220155,
+      "likes": 818,
+      "thumbnail": "https://i.ytimg.com/vi/0JLdH0cPdnc/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "ABOUT HULU Your favorite shows, movies, Live TV and originals so good your group chat won't stop talking about them. Welcome to Hulu. Couch? Waiting room? Bus? Under the covers at midnight? We don't judge, we just stream.",
+      "movieTitle": "The Secret Lives of Mormon Wives: Orange County",
+      "summary": "A new group of dynamic young mothers in Orange County collide in a community where beliefs are not just their religion; they are their identity. While some defend their way of life, fighting against modernity, others embrace change, becoming a platform to disrupt the status quo. Scandals and secrets will be revealed, facades will crumble, and families and friendships will change forever on both sides of the battlefield as this group of strong, game-changing influencers comes together to build their answer to #MomTok.",
+      "releaseDate": "2026-11-12",
+      "tmdbId": 320507,
+      "originalLanguage": "en",
+      "movieSlug": "the-secret-lives-of-mormon-wives-orange-county",
+      "pagePath": "tv/the-secret-lives-of-mormon-wives-orange-county/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Hulu",
+          "url": "https://www.hulu.com/search?q=The%20Secret%20Lives%20of%20Mormon%20Wives%3A%20Orange%20County"
+        }
+      ]
+    },
+    {
+      "id": "Vhwp06fwk6k",
+      "title": "The Hunting Wives: Season 2 | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-10-20T14:00:00Z",
+      "views": 667425,
+      "likes": 5198,
+      "thumbnail": "https://i.ytimg.com/vi/Vhwp06fwk6k/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "The Hunting Wives Season 2 is back with a bang, bang. Sophie and Margo on the outs as we return to Maple Brook. But old secrets and new foes force them back together. As they play their dangerous games, the question arises: Are they the hunters or the hunted?",
+      "movieTitle": "The Hunting Wives",
+      "summary": "Sophie trades New England for East Texas and falls into a wealthy socialite's magnetic orbit — where a clique of housewives hide deadly secrets.",
+      "releaseDate": "2025-07-21",
+      "tmdbId": 244447,
+      "originalLanguage": "en",
+      "movieSlug": "the-hunting-wives",
+      "pagePath": "tv/the-hunting-wives/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=The%20Hunting%20Wives"
+        }
+      ]
+    },
+    {
+      "id": "RHYQYYm5jLM",
+      "title": "Frisco King | Official Teaser | Paramount+",
+      "channelTitle": "Paramount Plus",
+      "publishedAt": "2026-10-15T15:00:04Z",
+      "views": 8983343,
+      "likes": 6847,
+      "thumbnail": "https://i.ytimg.com/vi/RHYQYYm5jLM/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "With Paramount+ you can stream over 40,000 episodes and movies from CBS, BET, Comedy Central, MTV, Nickelodeon, Smithsonian Channel, Paramount Pictures, and SHOWTIME® including exclusive originals, live sports, and news.",
+      "movieTitle": "Frisco King",
+      "summary": "New Orleans gangster Russell Lee Washington Jr. lands in Frisco, Texas, where he transforms small hustles into big business, with the help of an ambitious protégé, a loyal driver, and a growing network of eccentric partners.",
+      "releaseDate": "2026-12-18",
+      "tmdbId": 296244,
+      "originalLanguage": "en",
+      "movieSlug": "frisco-king",
+      "pagePath": "tv/frisco-king/",
+      "links": []
+    },
+    {
+      "id": "e5ExUsk6-OE",
+      "title": "The Fall of El Mayo | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-10-15T15:00:00Z",
+      "views": 1138846,
+      "likes": 6757,
+      "thumbnail": "https://i.ytimg.com/vi/e5ExUsk6-OE/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Co-founder of the Sinaloa Cartel, longtime partner of \"El Chapo\", and a ghost to authorities for over three decades. The documentary that tells the story of his downfall.",
+      "movieTitle": "The Fall of El Mayo",
+      "summary": "Co-founder of the Sinaloa Cartel, longtime partner of \"El Chapo\", and a ghost to authorities for over three decades. The documentary that tells the story of his downfall.",
+      "releaseDate": "2026-10-29",
+      "tmdbId": 338689,
+      "originalLanguage": "en",
+      "movieSlug": "the-fall-of-el-mayo",
+      "pagePath": "tv/the-fall-of-el-mayo/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=The%20Fall%20of%20El%20Mayo"
+        }
+      ]
+    },
+    {
+      "id": "urV5GzXcXsQ",
+      "title": "Cyberpunk: Edgerunners 2 | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-10-14T19:05:03Z",
+      "views": 4065372,
+      "likes": 78128,
+      "thumbnail": "https://i.ytimg.com/vi/urV5GzXcXsQ/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "The Anime of the Year returns in Cyberpunk: Edgerunners 2. A new standalone 10-episode story from the world of Cyberpunk 2077, Cyberpunk: Edgerunners 2 arrives October 20th, only on Netflix.",
+      "movieTitle": "Cyberpunk: Edgerunners 2",
+      "summary": "Cyberpunk: Edgerunners 2 takes place in 2078 Night City, a crime-filled metropolis dominated by cybernetic modifications, gang violence, and powerful corporations. Following attacks by David Martinez and V, Arasaka begins losing influence, allowing its rival Kang Tao to gain power.\n\nThe story follows Roman Carax, a young filmmaker who becomes involved with several Night City residents: D, a vengeful netrunner; Talia Yang, a rebellious girl escaping her corporate life; and Weak Kingsley, a former edgerunner searching for purpose. Their lives become connected through a mysterious datashard containing unpredictable power, which attracts the attention of criminals and corporations alike.",
+      "releaseDate": "",
+      "tmdbId": 342045,
+      "originalLanguage": "en",
+      "movieSlug": "cyberpunk-edgerunners-2",
+      "pagePath": "tv/cyberpunk-edgerunners-2/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Cyberpunk%3A%20Edgerunners%202"
+        }
+      ]
+    },
+    {
+      "id": "nAl3qxAHcT0",
+      "title": "The Mob | Official Trailer | Hulu",
+      "channelTitle": "Hulu",
+      "publishedAt": "2026-10-14T16:00:12Z",
+      "views": 8922240,
+      "likes": 857,
+      "thumbnail": "https://i.ytimg.com/vi/nAl3qxAHcT0/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "THE MOB, a new reality competition series hosted by Parker Posey, brings together reality stars, actors, musicians, and television personalities to compete for up to $250,000 in cash.",
+      "movieTitle": "The Mob",
+      "summary": "Celebrities compete in mob-themed challenges at an Italian villa for $250,000. They elect a don who controls eliminations and prize money. As power demands loyalty, contestants must decide whether to support the don or overthrow them.",
+      "releaseDate": "2026-10-26",
+      "tmdbId": 334887,
+      "originalLanguage": "en",
+      "movieSlug": "the-mob",
+      "pagePath": "tv/the-mob/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Hulu",
+          "url": "https://www.hulu.com/search?q=The%20Mob"
+        }
+      ]
+    },
+    {
+      "id": "RnRf-r-RdA4",
+      "title": "The Greatest - Official Trailer | Prime Video",
+      "channelTitle": "Prime Video",
+      "publishedAt": "2026-10-14T15:04:23Z",
+      "views": 9572468,
+      "likes": 10788,
+      "thumbnail": "https://i.ytimg.com/vi/RnRf-r-RdA4/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "Want to watch it now? We’ve got it. This week’s newest movies, last night’s TV shows, classic favorites, and more are available to stream instantly, plus all your videos are stored in Your Video Library. Prime Video offers a variety of unique and captivating entertainment, including original series “The Boys,” “Invincible,” “Hazbin Hotel,” “The Summer I Turned Pretty,” and more.",
+      "movieTitle": "The Greatest",
+      "summary": "Fresh off gold at the 1960 Olympics, young boxer Muhammad Ali (then known as Cassius Clay) sets his sights on the Heavyweight Championship. Contending with newfound fame, self-doubt, family conflict and a politically charged America, the once-in-a-generation prodigy discovers his greatest opponent won't be in the ring, but in a society that isn't ready for him to become his own man.",
+      "releaseDate": "2026-11-04",
+      "tmdbId": 258989,
+      "originalLanguage": "en",
+      "movieSlug": "the-greatest",
+      "pagePath": "tv/the-greatest/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Prime Video",
+          "url": "https://www.amazon.com/s?k=The%20Greatest&i=instant-video"
+        }
+      ]
+    },
+    {
+      "id": "MqRa6X31lUk",
+      "title": "The Gilded Age Season 4 | Official Trailer | HBO Max",
+      "channelTitle": "HBO Max",
+      "publishedAt": "2026-10-13T16:01:04Z",
+      "views": 43397785,
+      "likes": 7422,
+      "thumbnail": "https://i.ytimg.com/vi/MqRa6X31lUk/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "",
+      "movieTitle": "The Gilded Age",
+      "summary": "It's 1882 and the Gilded Age is in full swing when Marian Brook moves in with her rigidly conventional aunts in New York City. With the help of Peggy Scott, an African-American woman masquerading as her maid, Marian gets caught up in the dazzling lives of her rich neighbors as she struggles to decide between adhering to the rules or forging her own path.",
+      "releaseDate": "2022-01-24",
+      "tmdbId": 81723,
+      "originalLanguage": "en",
+      "movieSlug": "the-gilded-age",
+      "pagePath": "tv/the-gilded-age/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on HBO Max",
+          "url": "https://play.hbomax.com/search?q=The%20Gilded%20Age"
+        }
+      ]
+    },
+    {
+      "id": "_xnU6YVrCpA",
+      "title": "The Land | Official Trailer | Hulu",
+      "channelTitle": "Hulu",
+      "publishedAt": "2026-10-13T15:00:20Z",
+      "views": 7818036,
+      "likes": 3939,
+      "thumbnail": "https://i.ytimg.com/vi/_xnU6YVrCpA/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "Set within the world of the Cleveland Browns, Christopher Meloni, Mandy Moore, Chace Crawford and William H. Macy bring you the drama of the NFL like you’ve never seen it before.",
+      "movieTitle": "The Land",
+      "summary": "The story of two families, in which the high-stakes drama plays out not only on the field but also in the front offices of this NFL franchise, as a loyal fanbase wants a winning season now ... or face big changes if they don't.",
+      "releaseDate": "2027-02-15",
+      "tmdbId": 274395,
+      "originalLanguage": "en",
+      "movieSlug": "the-land",
+      "pagePath": "tv/the-land/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Hulu",
+          "url": "https://www.hulu.com/search?q=The%20Land"
+        }
+      ]
+    },
+    {
+      "id": "SO4CU9P8--8",
+      "title": "Minimum Wage | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-10-13T15:00:00Z",
+      "views": 2232314,
+      "likes": 33845,
+      "thumbnail": "https://i.ytimg.com/vi/SO4CU9P8--8/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "Teens struggle to run a local pizzeria while juggling school, a manic boss and minimum wage in this series based on the hit social media shorts.",
+      "movieTitle": "Minimum Wage",
+      "summary": "Teens struggle to run a local pizzeria while juggling school, a manic boss and minimum wage in this series based on the hit social media shorts.",
+      "releaseDate": "2026-10-26",
+      "tmdbId": 321221,
+      "originalLanguage": "en",
+      "movieSlug": "minimum-wage",
+      "pagePath": "tv/minimum-wage/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=Minimum%20Wage"
+        }
+      ]
+    },
+    {
+      "id": "pWdt8WMCqnc",
+      "title": "12 12 12 — Official Trailer | Apple TV",
+      "channelTitle": "Apple TV",
+      "publishedAt": "2026-10-13T13:59:52Z",
+      "views": 4435100,
+      "likes": 15430,
+      "thumbnail": "https://i.ytimg.com/vi/pWdt8WMCqnc/maxresdefault.jpg",
+      "audioLanguage": "en",
+      "language": "en",
+      "descriptionSummary": "Anthony Mackie and Jamie Dornan star in this heist drama. 12 months to plan. 12 hours to execute. 12 days to make it out alive.",
+      "movieTitle": "12 12 12",
+      "summary": "A heist takes 12 months to plan, 12 hours to execute—and a thief not caught within 12 days won't be caught at all. Across three pulse-pounding timelines, an FBI agent and a career criminal face off in a deadly game of cat and mouse through Europe.",
+      "releaseDate": "2026-11-12",
+      "tmdbId": 254630,
+      "originalLanguage": "en",
+      "movieSlug": "12-12-12",
+      "pagePath": "tv/12-12-12/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Apple TV",
+          "url": "https://tv.apple.com/search?term=12%2012%2012"
+        }
+      ]
+    },
+    {
+      "id": "wl7uj7n7DoY",
+      "title": "The Body | Official Trailer | Netflix",
+      "channelTitle": "Netflix",
+      "publishedAt": "2026-10-12T15:00:04Z",
+      "views": 2095733,
+      "likes": 18326,
+      "thumbnail": "https://i.ytimg.com/vi/wl7uj7n7DoY/maxresdefault.jpg",
+      "audioLanguage": "en-US",
+      "language": "en",
+      "descriptionSummary": "They pray hard and sin harder. After a dance-team initiation goes very wrong, the whole town starts asking the same question: What happened to Grace? The Body premieres November 11, only on Netflix.",
+      "movieTitle": "The Body",
+      "summary": "On Halloween night, an all-girls dance squad tumbles into Catholic guilt, unholy desires and ghostly visions when an initiation goes to hell.",
+      "releaseDate": "2026-11-11",
+      "tmdbId": 291507,
+      "originalLanguage": "en",
+      "movieSlug": "the-body",
+      "pagePath": "tv/the-body/",
+      "links": [
+        {
+          "kind": "watch",
+          "label": "Watch on Netflix",
+          "url": "https://www.netflix.com/search?q=The%20Body"
         }
       ]
     }
